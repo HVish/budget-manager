@@ -1,0 +1,8 @@
+# Environment variables
+/env/*.env
+!/env/*.sample.env
+
+# Mongo db volume data for persistence storage
+/db/data/*
+
+node_modules
