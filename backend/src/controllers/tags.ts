@@ -5,7 +5,11 @@ import { StatusCodes } from 'http-status-codes';
 import TagModel, { Tag } from '../models/tags';
 import { NotFoundError } from '../common/errors';
 
-const getAll: RequestHandler<never, WithId<Tag>[]> = async (req, res, next) => {
+const getAll: RequestHandler<never, WithId<Tag>[]> = async (
+  _req,
+  res,
+  next
+) => {
   try {
     const tags = await TagModel.find({});
     return res.status(StatusCodes.OK).json(tags);

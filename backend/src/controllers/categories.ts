@@ -6,7 +6,7 @@ import CategoryModel, { Category } from '../models/categories';
 import { NotFoundError } from '../common/errors';
 
 const getAll: RequestHandler<never, WithId<Category>[]> = async (
-  req,
+  _req,
   res,
   next
 ) => {
