@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+echo 'Creating mongodb user'
+
 mongosh <<EOF
 use admin
 db.createUser({
