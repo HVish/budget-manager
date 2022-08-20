@@ -1,8 +1,11 @@
 import { Express } from 'express';
-import registerCategoriesRoutes from './categories';
+
+import registerCategoryRoutes from './categories';
+import registerTagRoutes from './tags';
 
 const registerRoutes = (app: Express) => {
-  registerCategoriesRoutes(app);
+  registerCategoryRoutes(app);
+  registerTagRoutes(app);
 };
 
 export default registerRoutes;

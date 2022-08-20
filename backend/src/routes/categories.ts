@@ -1,7 +1,8 @@
 import { Express, Router } from 'express';
+
 import CategoryController from '../controllers/categories';
 
-const registerCategoriesRoutes = (app: Express) => {
+const registerCategoryRoutes = (app: Express) => {
   const routes = Router();
 
   routes.get('/', CategoryController.getAll);
@@ -12,4 +13,4 @@ const registerCategoriesRoutes = (app: Express) => {
   app.use('/categories', routes);
 };
 
-export default registerCategoriesRoutes;
+export default registerCategoryRoutes;
