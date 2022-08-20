@@ -1,5 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 
+export const KNOWN_ERROR = Symbol('KNOWN_ERROR');
+
 interface ErrorConfig {
   name: string;
   defaultCode: StatusCodes;
@@ -15,22 +17,26 @@ export interface ErrorParams<T> {
 type Extras = Record<string, string | number | undefined>;
 
 export interface ServerError {
-  readonly isKnownError: boolean;
+  readonly [KNOWN_ERROR]: boolean;
   code: StatusCodes;
   message: string;
   extras?: Extras;
 }
 
-export function createServerErrorClass({
+export function isKnownError(err: unknown): err is ServerError {
+  return (err as ServerError)[KNOWN_ERROR];
+}
+
+export function createAPIErrorClass({
   name,
   defaultCode,
   defaultmessage,
 }: ErrorConfig) {
-  return class AuthServerError<T extends Extras = never>
+  return class APIError<T extends Extras = never>
     extends Error
     implements ServerError
   {
-    public readonly isKnownError = true;
+    public readonly [KNOWN_ERROR] = true;
 
     public code: StatusCodes;
     public extras?: T;

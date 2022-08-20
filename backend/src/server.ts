@@ -1,8 +1,10 @@
-import express, { Express, Request, Response, NextFunction } from 'express';
+import express, { Express, NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-import routes from './routes';
-import { ServerError } from './utils/error';
+
+import { isKnownError, ServerError } from './utils/error';
+import registerRoutes from './routes';
+import { StatusCodes } from 'http-status-codes';
 
 function createServer(): Express {
   const app = express();
@@ -16,28 +18,29 @@ function createServer(): Express {
   }
 
   // app routes
-  app.use(routes);
+  registerRoutes(app);
 
   app.get('/ping', (_req, res) => {
-    res.send('pong');
+    res.status(StatusCodes.OK).json({ message: 'pong' });
   });
 
   app.use(
     (
-      err: ServerError | Error,
+      error: ServerError | Error,
       _req: Request,
       res: Response,
-      next: NextFunction
+      _next: NextFunction
     ) => {
-      if ((err as ServerError).isKnownError) {
-        const error = err as ServerError;
+      if (isKnownError(error)) {
         res.status(error.code).json({
           ...error.extras,
           message: error.message,
         });
       } else {
-        console.error(err);
-        next(err);
+        console.error(error);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+          message: error.message,
+        });
       }
     }
   );

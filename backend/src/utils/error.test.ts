@@ -1,9 +1,10 @@
 import { StatusCodes } from 'http-status-codes';
-import { createServerErrorClass } from './error';
+import { createAPIErrorClass, KNOWN_ERROR } from './error';
 
-describe('createServerErrorClass', () => {
+describe('createAPIErrorClass', () => {
   const defaultmessage = 'default message';
-  const TestError = createServerErrorClass({
+
+  const TestError = createAPIErrorClass({
     name: 'TestError',
     defaultCode: StatusCodes.FORBIDDEN,
     defaultmessage,
@@ -12,7 +13,7 @@ describe('createServerErrorClass', () => {
   test('should create an error class', () => {
     const error = new TestError();
     expect(error).toBeInstanceOf(TestError);
-    expect(error.isKnownError).toBe(true);
+    expect(error[KNOWN_ERROR]).toBe(true);
     expect(error.message).toBe(defaultmessage);
     expect(error.code).toBe(StatusCodes.FORBIDDEN);
   });
