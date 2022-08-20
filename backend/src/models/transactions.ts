@@ -5,6 +5,7 @@ import { Tag } from './tags';
 import { Wallet } from './wallets';
 
 export interface Transaction {
+  /** It will be negative for debit and positive for credit */
   amount: number;
   category: PopulatedDoc<Document<ObjectId> & Category>;
   description: string;

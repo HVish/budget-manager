@@ -1,0 +1,10 @@
+POST http://localhost:3001/transactions HTTP/1.1
+content-type: application/json
+
+{
+  "amount": -100,
+  "description": "Milk",
+  "wallet": "630156639b61a1117c915acc",
+  "category": "63014cdc02b9c4e59c415f0c",
+  "tags": ["630154258aa77cb8736e0a21"]
+}
