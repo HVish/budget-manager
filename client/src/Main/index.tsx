@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { Route, Routes } from 'react-router-dom';
+import Dashboard from '../Dashboard';
 
 import routes from '../shared/routes';
 import { colors } from '../shared/theme';
@@ -65,7 +66,7 @@ const Main = () => {
       <Header />
       <Body>
         <Routes>
-          <Route path={routes.dashboard} element="Dashboard content" />
+          <Route path={routes.dashboard} element={<Dashboard />} />
         </Routes>
       </Body>
     </Root>
