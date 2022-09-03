@@ -12,7 +12,7 @@ const Styles = () => {
           font-size: 1rem;
           font-family: 'Roboto', sans-serif;
           color: ${colors.text.primary};
-          background-color: #efedee;
+          background-color: ${colors.common.bg};
         }
 
         *,

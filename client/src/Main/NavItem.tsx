@@ -13,35 +13,32 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 10px 24px;
+  padding: 16px 20px;
   text-decoration: none;
-  color: ${colors.grey.dark};
-  font-size: 14px;
-
-  &.active {
-    color: ${colors.primary.main};
-    background-color: ${colors.primary.bg};
-  }
+  color: ${colors.primary.main};
+  font-size: 16px;
+  border-radius: 16px;
 
   &:hover {
-    background-color: ${colors.primary.bg};
+    background-color: ${colors.common.white};
+  }
+
+  &.active {
+    color: ${colors.common.white};
+    background-color: ${colors.primary.main};
   }
 `;
 
 const Icon = styled.div`
   width: 24px;
   height: 24px;
-  padding: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 5px;
-  color: ${colors.grey.dark};
-  background-color: ${colors.grey.main};
+  color: ${colors.primary.main};
 
   .active & {
     color: ${colors.common.white};
-    background-color: ${colors.primary.main};
   }
 `;
 

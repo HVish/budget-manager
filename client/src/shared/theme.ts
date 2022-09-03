@@ -1,12 +1,12 @@
 export const colors = {
   common: {
-    bg: '#F9F9F9',
+    bg: '#DFE7EA',
     white: '#FFFFFF',
     black: '#000000',
   },
   primary: {
-    main: '#417D7A',
-    bg: '#F1F5F6',
+    main: '#0B1008',
+    bg: '#F5F5F5',
   },
   success: {
     main: '#3BBD9A',
@@ -17,7 +17,7 @@ export const colors = {
     bg: '#FEF0F2',
   },
   text: {
-    primary: '#3A676C',
+    primary: '#070707',
     secondary: '#3C595D',
     light: '#93A3A6',
   },

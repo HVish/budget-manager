@@ -5,14 +5,12 @@ import Label from '../components/Label';
 import { colors } from '../shared/theme';
 
 const Root = styled.div`
-  display: inline-flex;
-  width: 200px;
-  height: 160px;
+  display: flex;
   flex-direction: column;
   gap: 16px;
   background-color: ${colors.common.white};
   border-radius: 4px;
-  padding: 18px 18px 30px;
+  padding: 18px;
 `;
 
 const Icon = styled.div`
@@ -32,6 +30,7 @@ const Title = styled.div`
 const StatsWrapper = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 14px;
   font-size: 24px;
   font-weight: bold;
