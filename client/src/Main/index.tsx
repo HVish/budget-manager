@@ -15,7 +15,7 @@ const Root = styled.div`
   margin: auto;
   overflow: hidden;
   grid-template-areas: 'navbar body';
-  grid-template-columns: 240px 1fr;
+  grid-template-columns: auto 1fr;
 `;
 
 const Navbar = styled(NavbarComp)`

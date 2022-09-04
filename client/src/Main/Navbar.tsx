@@ -10,7 +10,7 @@ const Root = styled.nav`
   flex-direction: column;
   gap: 12px;
   overflow: auto;
-  padding: 32px 20px;
+  padding: 32px 16px;
 `;
 
 const Icon = styled.div`
@@ -20,7 +20,8 @@ const Icon = styled.div`
 
 const Welcome = styled.div`
   font-size: 20px;
-  padding: 8px 12px 24px;
+  font-weight: bold;
+  padding: 12px 12px 30px;
 `;
 
 interface Props {

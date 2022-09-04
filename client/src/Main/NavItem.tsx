@@ -13,11 +13,13 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 16px 20px;
+  padding: 12px 16px;
   text-decoration: none;
   color: ${colors.primary.main};
-  font-size: 16px;
-  border-radius: 16px;
+  font-size: 14px;
+  border-radius: 12px;
+  min-width: 166px;
+  letter-spacing: 1.2;
 
   &:hover {
     background-color: ${colors.common.white};
@@ -30,8 +32,8 @@ const Wrapper = styled.div`
 `;
 
 const Icon = styled.div`
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;

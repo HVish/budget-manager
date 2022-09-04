@@ -15,9 +15,9 @@ const Root = styled.div`
 
 const Icon = styled.div`
   grid-area: icon;
-  width: 48px;
-  height: 48px;
-  padding: 8px;
+  width: 44px;
+  height: 44px;
+  padding: 6px;
   border-radius: 10px;
   margin-right: 16px;
   border: 1px solid;
@@ -41,7 +41,7 @@ const Icon = styled.div`
 
 const Title = styled.div`
   grid-area: title;
-  font-weight: 500;
+  font-weight: bold;
 `;
 
 const DateAndTime = styled.div`
@@ -53,7 +53,7 @@ const DateAndTime = styled.div`
 const Amount = styled.div`
   grid-area: amount;
   font-size: 18px;
-  font-weight: 500;
+  font-weight: bold;
 
   .income & {
     color: ${colors.success.main};

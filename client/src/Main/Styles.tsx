@@ -10,7 +10,7 @@ const Styles = () => {
           margin: 0;
           padding: 0;
           font-size: 1rem;
-          font-family: 'Roboto', sans-serif;
+          font-family: 'Lato', sans-serif;
           color: ${colors.text.primary};
           background-color: ${colors.common.bg};
         }
