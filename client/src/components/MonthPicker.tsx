@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import styled from '@emotion/styled';
-import Calendar from 'react-calendar';
+import CalendarComp from 'react-calendar';
 import { format, startOfMonth } from 'date-fns';
 
 import { ReactComponent as ExpandIcon } from '../assets/expand.svg';
@@ -11,19 +11,28 @@ const Root = styled.div`
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   min-width: 86px;
   border: 1px solid ${colors.grey.main};
   border-radius: 8px;
   font-size: 14px;
   font-weight: normal;
   padding: 8px 12px;
+  padding-right: 6px;
   color: ${colors.primary.main};
 `;
 
 const Icon = styled.span`
   width: 20px;
   height: 20px;
+`;
+
+const Calendar = styled(CalendarComp)`
+  border-radius: 12px;
+
+  & * {
+    border-radius: 6px;
+  }
 `;
 
 interface Props {
