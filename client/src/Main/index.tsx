@@ -13,6 +13,7 @@ const Root = styled.div`
   max-width: 1156px;
   background-color: ${colors.primary.bg};
   margin: auto;
+  gap: 16px;
   overflow: hidden;
   grid-template-areas: 'navbar body';
   grid-template-columns: auto 1fr;

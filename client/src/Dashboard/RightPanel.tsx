@@ -1,8 +1,10 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
+import Button from '../components/Button';
 import MonthPicker from '../components/MonthPicker';
 import Section from '../components/Section';
 import { colors } from '../shared/theme';
+import Stats from './Stats';
 
 const Root = styled.div`
   padding: 64px 28px 32px;
@@ -38,7 +40,19 @@ const RightPanel = ({ className }: Props) => {
             </>
           }
         >
-          Statistics
+          <Stats
+            income
+            amount={200000}
+            title="Total income"
+            changeInPercentage={1}
+          />
+          <Stats
+            expense
+            amount={-4258}
+            title="Total expense"
+            changeInPercentage={20}
+          />
+          <Button>View All</Button>
         </Section>
       </Wrapper>
     </Root>
