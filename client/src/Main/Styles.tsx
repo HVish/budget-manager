@@ -1,3 +1,5 @@
+import 'react-calendar/dist/Calendar.css';
+
 import { css, Global } from '@emotion/react';
 import { colors } from '../shared/theme';
 

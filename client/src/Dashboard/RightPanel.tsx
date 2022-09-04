@@ -1,4 +1,6 @@
 import styled from '@emotion/styled';
+import { useState } from 'react';
+import MonthPicker from '../components/MonthPicker';
 import Section from '../components/Section';
 import { colors } from '../shared/theme';
 
@@ -22,11 +24,22 @@ interface Props {
 }
 
 const RightPanel = ({ className }: Props) => {
+  const [month, setMonth] = useState(Date.now());
+
   return (
     <Root className={className}>
       <Wrapper>
         <Section header="Quick actions">Quick actions</Section>
-        <Section header="Statistics">Statistics</Section>
+        <Section
+          header={
+            <>
+              <span>Statistics</span>
+              <MonthPicker onChange={setMonth} value={month} />
+            </>
+          }
+        >
+          Statistics
+        </Section>
       </Wrapper>
     </Root>
   );
