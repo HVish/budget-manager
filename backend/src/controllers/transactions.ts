@@ -4,14 +4,21 @@ import { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 import TransactionModel, { Transaction } from '../models/transactions';
-import WalletModel, { Wallet } from '../models/wallets';
-import CategoryModel, { Category } from '../models/categories';
-import { NotFoundError } from '../common/errors';
+import WalletModel from '../models/wallets';
+
+const getAll: RequestHandler<never, Transaction[]> = async (req, res, next) => {
+  try {
+    const transactions = await TransactionModel.find().limit(20);
+    return res.status(StatusCodes.OK).json(transactions);
+  } catch (error) {
+    next(error);
+  }
+};
 
 const create: RequestHandler<
   never,
-  { category: Category; transaction: WithId<Transaction>; wallet: Wallet },
-  Transaction
+  WithId<Transaction>,
+  Omit<Transaction, 'userId' | 'createdAt' | 'updatedAt'>
 > = async (req, res, next) => {
   const session = await mongoose.connection.startSession();
 
@@ -19,25 +26,22 @@ const create: RequestHandler<
     session.startTransaction();
 
     const wallet = await WalletModel.findById(req.body.wallet);
-    if (!wallet) throw new NotFoundError({ message: 'Wallet not found!' });
 
-    const category = await CategoryModel.findById(req.body.category);
-    if (!category) throw new NotFoundError({ message: 'Category not found!' });
+    const transaction = await TransactionModel.create({
+      ...req.body,
+      userId: req.userId,
+    });
 
-    const transaction = await TransactionModel.create(req.body);
+    if (wallet) {
+      wallet.balance += transaction.amount;
+      wallet.save();
+    }
 
-    wallet.balance += transaction.amount;
-    category.balance += transaction.amount;
-
-    await Promise.all([wallet.save(), category.save(), transaction.save()]);
+    await transaction.save();
 
     await session.commitTransaction();
 
-    return res.status(StatusCodes.CREATED).json({
-      category,
-      transaction,
-      wallet,
-    });
+    return res.status(StatusCodes.CREATED).json(transaction);
   } catch (error) {
     await session.abortTransaction();
     next(error);
@@ -47,6 +51,7 @@ const create: RequestHandler<
 };
 
 const TransactionController = {
+  getAll,
   create,
 };
 

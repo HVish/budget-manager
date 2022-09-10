@@ -17,6 +17,12 @@ const Styles = () => {
           background-color: ${colors.common.bg};
         }
 
+        textarea {
+          font-size: 1rem;
+          font-family: 'Lato', sans-serif;
+          color: ${colors.text.primary};
+        }
+
         *,
         *::after,
         *::before {

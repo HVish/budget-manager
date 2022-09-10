@@ -4,6 +4,7 @@ import Button from '../components/Button';
 import MonthPicker from '../components/MonthPicker';
 import Section from '../components/Section';
 import { colors } from '../shared/theme';
+import QuickActions from './QuickActions';
 import Stats from './Stats';
 
 const Root = styled.div`
@@ -31,7 +32,7 @@ const RightPanel = ({ className }: Props) => {
   return (
     <Root className={className}>
       <Wrapper>
-        <Section header="Quick actions">Quick actions</Section>
+        <QuickActions />
         <Section
           header={
             <>

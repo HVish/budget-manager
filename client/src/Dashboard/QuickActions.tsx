@@ -1,38 +1,62 @@
-import styled from '@emotion/styled';
-import { colors } from '../shared/theme';
+import { useState } from 'react';
 
-const Root = styled.div`
-  padding: 64px 28px 32px;
-`;
+import Button from '../components/Button';
+import Input from '../components/Input';
+import Section from '../components/Section';
+import { useAppDispatch } from '../store';
+import { addTransaction } from '../store/actions';
 
-const Wrapper = styled.section`
-  background-color: ${colors.common.white};
-  border-radius: 12px;
-  padding: 32px 24px;
-  height: 100%;
-`;
+const QuickActions = () => {
+  const dispatch = useAppDispatch();
 
-const Header = styled.header`
-  font-size: 20px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-`;
+  const [isLoading, setIsLoading] = useState(false);
 
-interface Props {
-  className?: string;
-}
+  const [amount, setAmount] = useState('');
+  const [description, setDescription] = useState('');
 
-const Cards = ({ className }: Props) => {
+  const reset = () => {
+    setAmount('');
+    setDescription('');
+  };
+
+  const handleAddTransaction = async () => {
+    if (!amount || !description) return;
+
+    try {
+      setIsLoading(true);
+      await dispatch(
+        addTransaction({
+          amount: parseFloat(amount),
+          description,
+        })
+      );
+      reset();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <Root className={className}>
-      <Wrapper>
-        <Header>Quick actions</Header>
-      </Wrapper>
-    </Root>
+    <Section header="Quick actions">
+      <Input
+        type="number"
+        label="Amount"
+        value={amount.toString()}
+        onChange={setAmount}
+      />
+      <Input
+        multiline
+        type="text"
+        label="Description"
+        value={description}
+        onChange={setDescription}
+      />
+      <Button disabled={isLoading} onClick={handleAddTransaction}>
+        {isLoading ? 'Adding...' : 'Add Transaction'}
+      </Button>
+    </Section>
   );
 };
-
-export default Cards;
+export default QuickActions;

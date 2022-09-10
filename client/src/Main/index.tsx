@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import Dashboard from '../Dashboard';
 
 import routes from '../shared/routes';
@@ -36,6 +36,12 @@ const Main = () => {
       <Body>
         <Routes>
           <Route path={routes.dashboard} element={<Dashboard />} />
+          <Route path={routes.transactions} element="Transactions" />
+          <Route path={routes.wallets} element="Wallets" />
+          <Route
+            path="*"
+            element={<Navigate to={routes.dashboard} replace />}
+          />
         </Routes>
       </Body>
     </Root>

@@ -17,3 +17,7 @@ export function formatCurrency(amount: number) {
 export function formatUnixTime(unixTime: number) {
   return format(unixTime, 'dd MMM, yyyy HH:mm a');
 }
+
+export function notUndefined<T>(item: T | undefined): item is T {
+  return item !== undefined;
+}

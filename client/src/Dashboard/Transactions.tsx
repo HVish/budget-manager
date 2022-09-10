@@ -1,7 +1,17 @@
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+
 import styled from '@emotion/styled';
+
 import Button from '../components/Button';
 import Section from '../components/Section';
 import Transaction from '../components/Transaction';
+import {
+  selectIsTransactionsLoading,
+  selectTransactions,
+} from '../store/selectors';
+import { fetchTransactions } from '../store/actions';
+import { useAppDispatch } from '../store';
 
 const Root = styled.section`
   border-radius: 4px;
@@ -12,6 +22,18 @@ interface Props {
 }
 
 const Transactions = ({ className }: Props) => {
+  const dispatch = useAppDispatch();
+
+  const isLoading = useSelector(selectIsTransactionsLoading);
+  const transactions = useSelector(selectTransactions);
+
+  useEffect(
+    function getData() {
+      dispatch(fetchTransactions());
+    },
+    [dispatch]
+  );
+
   return (
     <Root className={className}>
       <Section
@@ -22,12 +44,16 @@ const Transactions = ({ className }: Props) => {
           </>
         }
       >
-        <Transaction
-          amount={-137}
-          date={Date.now()}
-          title="Milk and vegetables"
-        />
-        <Transaction amount={200000} date={Date.now()} title="Salary" />
+        {isLoading ? 'Getting transactions...' : null}
+        {!transactions.length ? 'No transactions found!' : null}
+        {transactions.map(transaction => (
+          <Transaction
+            key={transaction._id}
+            amount={transaction.amount}
+            date={transaction.createdAt}
+            title={transaction.description}
+          />
+        ))}
       </Section>
     </Root>
   );

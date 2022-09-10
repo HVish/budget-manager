@@ -18,6 +18,8 @@ services:
       - '3000:3000'
     volumes:
       - ./client:/app
+    env_file:
+      - ./env/client.env
     restart: on-failure
     container_name: client
     command: npm run start

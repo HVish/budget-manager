@@ -15,18 +15,20 @@ const Root = styled.button`
 
   &:disabled {
     cursor: default;
+    opacity: 0.5;
   }
 `;
 
 interface Props {
   className?: string;
   children: ReactNode;
+  disabled?: boolean;
   onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
-const Button = ({ className, children, onClick }: Props) => {
+const Button = ({ className, children, disabled, onClick }: Props) => {
   return (
-    <Root className={className} onClick={onClick}>
+    <Root className={className} disabled={disabled} onClick={onClick}>
       {children}
     </Root>
   );
