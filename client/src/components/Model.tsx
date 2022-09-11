@@ -9,6 +9,7 @@ const Root = styled.div`
   position: fixed;
   inset: 0;
   background-color: rgba(0, 0, 0, 0.25);
+  z-index: 100000;
 `;
 
 interface Props {

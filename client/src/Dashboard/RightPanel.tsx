@@ -1,14 +1,21 @@
-import styled from '@emotion/styled';
 import { useState } from 'react';
+import styled from '@emotion/styled';
+
+import { ReactComponent as CloseIcon } from '../assets/close.svg';
+
 import Button from '../components/Button';
 import MonthPicker from '../components/MonthPicker';
 import Section from '../components/Section';
 import { colors } from '../shared/theme';
-import QuickActions from './QuickActions';
+import AddTransaction from './AddTransaction';
 import Stats from './Stats';
+import { useAppDispatch } from '../store';
+import { toggleRightPanel } from '../store/app/actions';
+import { getMediaQuery, useIsTablet } from '../shared/media-query';
 
 const Root = styled.div`
   padding: 64px 28px 32px;
+  position: relative;
 `;
 
 const Wrapper = styled.div`
@@ -18,8 +25,28 @@ const Wrapper = styled.div`
   height: 100%;
   min-width: 280px;
   display: flex;
+  gap: 1rem;
   flex-direction: column;
   justify-content: space-between;
+
+  @media ${getMediaQuery('tablet')} {
+    flex-direction: column-reverse;
+  }
+`;
+
+const CloseButton = styled.button`
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 1rem;
+  border: none;
+  background-color: transparent;
+
+  svg {
+    width: 28px;
+    height: 28px;
+  }
 `;
 
 interface Props {
@@ -27,12 +54,24 @@ interface Props {
 }
 
 const RightPanel = ({ className }: Props) => {
+  const isTablet = useIsTablet();
+  const dispatch = useAppDispatch();
+
   const [month, setMonth] = useState(Date.now());
+
+  const closeRightPanel = () => {
+    dispatch(toggleRightPanel({ isOpen: false }));
+  };
 
   return (
     <Root className={className}>
+      {isTablet && (
+        <CloseButton onClick={closeRightPanel}>
+          <CloseIcon />
+        </CloseButton>
+      )}
       <Wrapper>
-        <QuickActions />
+        <AddTransaction />
         <Section
           header={
             <>

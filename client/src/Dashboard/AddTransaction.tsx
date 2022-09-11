@@ -6,7 +6,7 @@ import Section from '../components/Section';
 import { useAppDispatch } from '../store';
 import { addTransaction } from '../store/transactions/actions';
 
-const QuickActions = () => {
+const AddTransaction = () => {
   const dispatch = useAppDispatch();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +39,7 @@ const QuickActions = () => {
   };
 
   return (
-    <Section header="Quick actions">
+    <Section header="Add transaction">
       <Input
         type="number"
         label="Amount"
@@ -54,9 +54,9 @@ const QuickActions = () => {
         onChange={setDescription}
       />
       <Button disabled={isLoading} onClick={handleAddTransaction}>
-        {isLoading ? 'Adding...' : 'Add Transaction'}
+        {isLoading ? 'Adding...' : 'Add'}
       </Button>
     </Section>
   );
 };
-export default QuickActions;
+export default AddTransaction;

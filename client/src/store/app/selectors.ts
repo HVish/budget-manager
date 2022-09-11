@@ -4,6 +4,6 @@ export const selectIsNavOpen = (state: RootState) => {
   return state.app.isNavOpen;
 };
 
-export const selectIsQuickActionsOpen = (state: RootState) => {
-  return state.app.isQuickActionsOpen;
+export const selectIsRightPanelOpen = (state: RootState) => {
+  return state.app.isRightPanelOpen;
 };

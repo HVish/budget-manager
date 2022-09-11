@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import Dashboard from '../Dashboard';
-import { MOBILE_WIDTH } from '../shared/media-query';
+import { getMediaQuery } from '../shared/media-query';
 
 import routes from '../shared/routes';
 import { colors } from '../shared/theme';
@@ -21,7 +21,7 @@ const Root = styled.div`
   grid-template-areas: 'navbar body';
   grid-template-columns: auto 1fr;
 
-  @media only screen and (max-width: ${MOBILE_WIDTH}px) {
+  @media ${getMediaQuery('medium')} {
     position: relative;
     grid-template-areas: 'body';
     grid-template-columns: 1fr;
@@ -31,7 +31,7 @@ const Root = styled.div`
 const Navbar = styled(NavbarComp)<{ isOpen: boolean }>`
   grid-area: navbar;
 
-  @media only screen and (max-width: ${MOBILE_WIDTH}px) {
+  @media ${getMediaQuery('medium')} {
     position: absolute;
     transform: ${props =>
       props.isOpen ? 'translateX(0)' : 'translateX(-100%)'};

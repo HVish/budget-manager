@@ -4,7 +4,7 @@ import { Transaction } from '../shared/types';
 
 export interface AppState {
   isNavOpen: boolean;
-  isQuickActionsOpen: boolean;
+  isRightPanelOpen: boolean;
 }
 
 export interface TransactionsState {

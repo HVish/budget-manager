@@ -1,10 +1,17 @@
 import styled from '@emotion/styled';
+import Fab from '../components/Fab';
+
+import { ReactComponent as AddIcon } from '../assets/add.svg';
 
 import HeaderComp from '../components/Header';
-import { MOBILE_WIDTH } from '../shared/media-query';
+import { getMediaQuery, useIsTablet } from '../shared/media-query';
 import { colors } from '../shared/theme';
+import { useAppDispatch } from '../store';
+import { toggleRightPanel } from '../store/app/actions';
 import RightPanelComp from './RightPanel';
 import TransactionsComp from './Transactions';
+import { useSelector } from 'react-redux';
+import { selectIsRightPanelOpen } from '../store/app/selectors';
 
 const Root = styled.div`
   display: grid;
@@ -13,9 +20,12 @@ const Root = styled.div`
   grid-template-columns: 2fr 1fr;
   grid-template-rows: auto 1fr;
 
-  @media only screen and (max-width: ${MOBILE_WIDTH}px) {
+  @media ${getMediaQuery('medium')} {
     position: relative;
     padding: 0 1.5rem;
+  }
+
+  @media ${getMediaQuery('tablet')} {
     grid-template-areas: 'header' 'transactions';
     grid-template-columns: 1fr;
   }
@@ -25,19 +35,24 @@ const Header = styled(HeaderComp)`
   grid-area: header;
 `;
 
-const RightPanel = styled(RightPanelComp)`
+const RightPanel = styled(RightPanelComp)<{ isOpen: boolean }>`
   grid-area: right-panel;
   height: 100%;
 
-  @media only screen and (max-width: ${MOBILE_WIDTH}px) {
+  @media ${getMediaQuery('tablet')} {
     position: absolute;
     right: 0px;
     top: 0;
     bottom: 0;
-    transform: translateX(100%);
+    transform: ${props =>
+      props.isOpen ? 'translateX(0)' : 'translateX(100%)'};
     background-color: ${colors.common.bg};
     z-index: 1000;
-    transition: 300ms ease-in;
+    transition: transform 300ms ease-in;
+    min-width: 300px;
+  }
+
+  @media ${getMediaQuery('mobile')} {
     min-width: 100vw;
   }
 `;
@@ -48,11 +63,23 @@ const Transactions = styled(TransactionsComp)`
 `;
 
 const Dashboard = () => {
+  const isTablet = useIsTablet();
+  const dispatch = useAppDispatch();
+
+  const isRightPanelOpen = useSelector(selectIsRightPanelOpen);
+
+  const openRightPanel = () => dispatch(toggleRightPanel({ isOpen: true }));
+
   return (
     <Root>
       <Header>Dashboard</Header>
-      <RightPanel />
+      <RightPanel isOpen={isRightPanelOpen} />
       <Transactions />
+      {isTablet ? (
+        <Fab onClick={openRightPanel}>
+          <AddIcon />
+        </Fab>
+      ) : null}
     </Root>
   );
 };

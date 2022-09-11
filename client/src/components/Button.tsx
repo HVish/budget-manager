@@ -4,18 +4,19 @@ import { colors } from '../shared/theme';
 
 const Root = styled.button`
   cursor: pointer;
-  padding: 10px;
+  padding: 0 24px;
   min-width: 96px;
+  min-height: 40px;
+  border-radius: 100px;
   background-color: ${colors.primary.main};
   color: ${colors.common.white};
   text-align: center;
   border: none;
-  border-radius: 10px;
   font-size: 12px;
 
   &:disabled {
     cursor: default;
-    opacity: 0.5;
+    opacity: 0.38;
   }
 `;
 

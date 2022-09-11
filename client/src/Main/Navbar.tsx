@@ -9,7 +9,7 @@ import { ReactComponent as WalletIcon } from '../assets/wallet.svg';
 import routes from '../shared/routes';
 import { selectIsNavOpen } from '../store/app/selectors';
 import NavItem from './NavItem';
-import { useIsMobile } from '../shared/media-query';
+import { useIsMediumDevice } from '../shared/media-query';
 import { useAppDispatch } from '../store';
 import { toggleNav } from '../store/app/actions';
 
@@ -53,18 +53,18 @@ interface Props {
 const Navbar = ({ className }: Props) => {
   const dispatch = useAppDispatch();
 
-  const isMobile = useIsMobile();
+  const isMediumDevice = useIsMediumDevice();
   const isNavOpen = useSelector(selectIsNavOpen);
 
   const closeNav = () => dispatch(toggleNav({ isOpen: false }));
 
   return (
     <Root className={className}>
-      {isNavOpen && isMobile ? (
+      {isNavOpen && isMediumDevice && (
         <CloseNavButton>
           <MenuOpenIcon onClick={closeNav} />
         </CloseNavButton>
-      ) : null}
+      )}
       <Icon>👋</Icon>
       <Welcome>Hi, Sakshee</Welcome>
       <NavItem

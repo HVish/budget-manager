@@ -1,11 +1,11 @@
 import { createReducer } from '@reduxjs/toolkit';
 
 import { AppState } from '../state';
-import { toggleNav, toggleQuickActions } from './actions';
+import { toggleNav, toggleRightPanel } from './actions';
 
 const initialState: AppState = {
   isNavOpen: false,
-  isQuickActionsOpen: false,
+  isRightPanelOpen: false,
 };
 
 const app = createReducer(initialState, builder => {
@@ -14,9 +14,9 @@ const app = createReducer(initialState, builder => {
     state.isNavOpen = isOpen;
   });
 
-  builder.addCase(toggleQuickActions, (state, action) => {
-    const { isOpen } = action.payload || { isOpen: !state.isQuickActionsOpen };
-    state.isQuickActionsOpen = isOpen;
+  builder.addCase(toggleRightPanel, (state, action) => {
+    const { isOpen } = action.payload || { isOpen: !state.isRightPanelOpen };
+    state.isRightPanelOpen = isOpen;
   });
 });
 
