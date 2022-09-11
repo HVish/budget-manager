@@ -4,7 +4,7 @@ import Button from '../components/Button';
 import Input from '../components/Input';
 import Section from '../components/Section';
 import { useAppDispatch } from '../store';
-import { addTransaction } from '../store/actions';
+import { addTransaction } from '../store/transactions/actions';
 
 const QuickActions = () => {
   const dispatch = useAppDispatch();

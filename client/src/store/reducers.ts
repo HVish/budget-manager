@@ -1,37 +1,11 @@
-import { createReducer } from '@reduxjs/toolkit';
-import { addTransaction, fetchTransactions } from './actions';
-import { AppState } from './state';
+import { combineReducers } from '@reduxjs/toolkit';
 
-const initialState: AppState = {
-  trasactions: {
-    isLoading: false,
-    byId: {},
-    order: [],
-  },
-};
+import app from './app';
+import transactions from './transactions';
 
-const reducer = createReducer(initialState, builder => {
-  builder.addCase(fetchTransactions.rejected, state => {
-    state.trasactions.isLoading = false;
-  });
-
-  builder.addCase(fetchTransactions.fulfilled, (state, action) => {
-    state.trasactions.isLoading = false;
-
-    state.trasactions.byId = {};
-    state.trasactions.order = [];
-
-    for (const transaction of action.payload) {
-      state.trasactions.byId[transaction._id] = transaction;
-      state.trasactions.order.push(transaction._id);
-    }
-  });
-
-  builder.addCase(addTransaction.fulfilled, (state, action) => {
-    const transaction = action.payload;
-    state.trasactions.byId[transaction._id] = transaction;
-    state.trasactions.order.push(transaction._id);
-  });
+const reducer = combineReducers({
+  app,
+  transactions,
 });
 
 export default reducer;

@@ -9,8 +9,8 @@ import Transaction from '../components/Transaction';
 import {
   selectIsTransactionsLoading,
   selectTransactions,
-} from '../store/selectors';
-import { fetchTransactions } from '../store/actions';
+} from '../store/transactions/selectors';
+import { fetchTransactions } from '../store/transactions/actions';
 import { useAppDispatch } from '../store';
 
 const Root = styled.section`
@@ -24,8 +24,8 @@ interface Props {
 const Transactions = ({ className }: Props) => {
   const dispatch = useAppDispatch();
 
-  const isLoading = useSelector(selectIsTransactionsLoading);
   const transactions = useSelector(selectTransactions);
+  const isLoading = useSelector(selectIsTransactionsLoading);
 
   useEffect(
     function getData() {
