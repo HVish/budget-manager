@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import clsx from 'clsx';
-import { ReactNode } from 'react';
+import { MouseEventHandler, ReactNode } from 'react';
 import { NavLink as NavLinkComp } from 'react-router-dom';
 
 import { colors } from '../shared/theme';
@@ -48,12 +48,13 @@ interface Props {
   className?: string;
   icon: ReactNode;
   label: string;
+  onClick?: MouseEventHandler<HTMLAnchorElement>;
   to: string;
 }
 
-const NavItem = ({ className, icon, label, to }: Props) => {
+const NavItem = ({ className, icon, label, onClick, to }: Props) => {
   return (
-    <NavLink to={to}>
+    <NavLink to={to} onClick={onClick}>
       {({ isActive }) => (
         <Wrapper className={clsx(className, isActive ? 'active' : undefined)}>
           <Icon>{icon}</Icon>

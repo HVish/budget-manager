@@ -12,6 +12,9 @@ import NavItem from './NavItem';
 import { useIsMediumDevice } from '../shared/media-query';
 import { useAppDispatch } from '../store';
 import { toggleNav } from '../store/app/actions';
+import Button from '../components/Button';
+import { clearSession } from '../shared/session';
+import { useNavigate } from 'react-router-dom';
 
 const Root = styled.nav`
   display: flex;
@@ -46,17 +49,28 @@ const Welcome = styled.div`
   padding: 12px 12px 30px;
 `;
 
+const Logout = styled(Button)`
+  margin-top: auto;
+`;
+
 interface Props {
   className?: string;
 }
 
 const Navbar = ({ className }: Props) => {
+  const navigation = useNavigate();
   const dispatch = useAppDispatch();
 
   const isMediumDevice = useIsMediumDevice();
   const isNavOpen = useSelector(selectIsNavOpen);
 
   const closeNav = () => dispatch(toggleNav({ isOpen: false }));
+
+  const handleLogout = () => {
+    closeNav();
+    clearSession();
+    navigation('/auth');
+  };
 
   return (
     <Root className={className}>
@@ -71,13 +85,21 @@ const Navbar = ({ className }: Props) => {
         to={routes.dashboard}
         label="Dashboard"
         icon={<DashboardIcon />}
+        onClick={closeNav}
       />
       <NavItem
         to={routes.transactions}
         label="Transactions"
         icon={<TransactionsIcon />}
+        onClick={closeNav}
       />
-      <NavItem to={routes.wallets} label="Wallets" icon={<WalletIcon />} />
+      <NavItem
+        to={routes.wallets}
+        label="Wallets"
+        icon={<WalletIcon />}
+        onClick={closeNav}
+      />
+      <Logout onClick={handleLogout}>Logout</Logout>
     </Root>
   );
 };

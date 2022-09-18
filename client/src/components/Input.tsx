@@ -39,6 +39,7 @@ const InputField = styled.input`
   &:focus ~ label,
   &.filled ~ label {
     top: -14px;
+    left: 0;
     font-size: 12px;
     color: ${colors.text.primary};
   }
@@ -72,18 +73,27 @@ const Bar = styled.div`
 interface Props {
   type: 'number' | 'text' | 'password';
   multiline?: boolean;
+  autoComplete?: string;
   label: string;
   value: string;
   onChange: (value: string, e: ChangeEvent<HTMLInputElement>) => any;
 }
 
-const Input = ({ type, multiline, label, value, onChange }: Props) => {
+const Input = ({
+  type,
+  autoComplete,
+  multiline,
+  label,
+  value,
+  onChange,
+}: Props) => {
   return (
     <Root>
       <InputField
         as={multiline ? 'textarea' : undefined}
         type={type}
         value={value}
+        autoComplete={autoComplete}
         className={value !== '' ? 'filled' : undefined}
         onChange={e => onChange(e.target.value, e)}
       />

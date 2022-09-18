@@ -10,5 +10,8 @@ declare namespace NodeJS {
     MONGO_DB_NAME: string;
     MONGO_USERNAME: string;
     MONGO_PASSWORD: string;
+
+    APP_USERNAME: string;
+    APP_PASSWORD: string;
   }
 }
