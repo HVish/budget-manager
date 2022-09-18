@@ -1,3 +1,4 @@
+name: budget-manager-prod
 services:
   nginx:
     depends_on:
@@ -37,7 +38,6 @@ services:
     env_file:
       - ./env/common.env
       - ./env/backend.env
-    command: npm run start:dev
   mongodb:
     build:
       context: ./db
