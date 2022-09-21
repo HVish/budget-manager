@@ -1,6 +1,7 @@
 name: budget-manager-prod
 services:
   nginx:
+    image: 139814396959.dkr.ecr.ap-south-1.amazonaws.com/budget-manager-nginx:latest
     depends_on:
       - client
       - backend
@@ -12,6 +13,7 @@ services:
     ports:
       - '80:80'
   client:
+    image: 139814396959.dkr.ecr.ap-south-1.amazonaws.com/budget-manager-client:latest
     build:
       context: ./client
       dockerfile: Dockerfile
@@ -26,6 +28,7 @@ services:
   backend:
     depends_on:
       - mongodb
+    image: 139814396959.dkr.ecr.ap-south-1.amazonaws.com/budget-manager-backend:latest
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -33,12 +36,11 @@ services:
       - '3001:3001'
     restart: on-failure
     container_name: backend
-    volumes:
-      - ./backend:/app
     env_file:
       - ./env/common.env
       - ./env/backend.env
   mongodb:
+    image: 139814396959.dkr.ecr.ap-south-1.amazonaws.com/budget-manager-mongodb:latest
     build:
       context: ./db
       dockerfile: Dockerfile
