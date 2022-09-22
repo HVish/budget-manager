@@ -52,6 +52,12 @@ const AddTransaction = () => {
         label="Description"
         value={description}
         onChange={setDescription}
+        onEnter={e => {
+          if (!e.shiftKey) {
+            e.preventDefault();
+            handleAddTransaction();
+          }
+        }}
       />
       <Button disabled={isLoading} onClick={handleAddTransaction}>
         {isLoading ? 'Adding...' : 'Add'}

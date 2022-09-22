@@ -1,8 +1,14 @@
 import request from '../../shared/request';
 import { Transaction } from '../../shared/types';
 
-export async function getTransactions() {
-  const response = await request.get<Transaction[]>('/transactions');
+interface GetTransactionsParams {
+  lastId?: string;
+}
+
+export async function getTransactions(params?: GetTransactionsParams) {
+  const response = await request.get<Transaction[]>('/transactions', {
+    params,
+  });
   return response.data;
 }
 

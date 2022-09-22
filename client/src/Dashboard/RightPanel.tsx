@@ -14,7 +14,7 @@ import { toggleRightPanel } from '../store/app/actions';
 import { getMediaQuery, useIsTablet } from '../shared/media-query';
 
 const Root = styled.div`
-  padding: 64px 28px 32px;
+  padding: 64px 16px 32px;
   position: relative;
 `;
 
@@ -28,6 +28,7 @@ const Wrapper = styled.div`
   gap: 1rem;
   flex-direction: column;
   justify-content: space-between;
+  overflow: auto;
 
   @media ${getMediaQuery('tablet')} {
     flex-direction: column-reverse;

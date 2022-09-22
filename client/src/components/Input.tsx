@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, KeyboardEvent } from 'react';
 import { colors } from '../shared/theme';
 
 const color = '#2196f3';
@@ -77,6 +77,7 @@ interface Props {
   label: string;
   value: string;
   onChange: (value: string, e: ChangeEvent<HTMLInputElement>) => any;
+  onEnter?: (e: KeyboardEvent) => any;
 }
 
 const Input = ({
@@ -86,7 +87,14 @@ const Input = ({
   label,
   value,
   onChange,
+  onEnter,
 }: Props) => {
+  const handleKeyPress = (e: KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      onEnter?.(e);
+    }
+  };
+
   return (
     <Root>
       <InputField
@@ -96,6 +104,7 @@ const Input = ({
         autoComplete={autoComplete}
         className={value !== '' ? 'filled' : undefined}
         onChange={e => onChange(e.target.value, e)}
+        onKeyDown={handleKeyPress}
       />
       <span className="highlight" />
       <Bar className="bar" />

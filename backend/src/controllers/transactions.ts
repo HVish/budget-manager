@@ -6,9 +6,25 @@ import { StatusCodes } from 'http-status-codes';
 import TransactionModel, { Transaction } from '../models/transactions';
 import WalletModel from '../models/wallets';
 
-const getAll: RequestHandler<never, Transaction[]> = async (req, res, next) => {
+interface TransactionQueryParams {
+  /** find transactions after this transaction id */
+  lastId?: string;
+}
+
+const getAll: RequestHandler<
+  never,
+  Transaction[],
+  never,
+  TransactionQueryParams
+> = async (req, res, next) => {
   try {
-    const transactions = await TransactionModel.find().limit(20);
+    const lastId = req.query.lastId;
+    const filter = lastId ? { _id: { $lt: lastId } } : {};
+
+    const transactions = await TransactionModel.find(filter)
+      .sort({ createdAt: -1 })
+      .limit(25);
+
     return res.status(StatusCodes.OK).json(transactions);
   } catch (error) {
     next(error);

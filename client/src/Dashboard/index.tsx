@@ -19,10 +19,10 @@ const Root = styled.div`
   grid-template-areas: 'header right-panel' 'transactions right-panel';
   grid-template-columns: 2fr 1fr;
   grid-template-rows: auto 1fr;
+  overflow: auto;
 
   @media ${getMediaQuery('medium')} {
     position: relative;
-    padding: 0 1.5rem;
   }
 
   @media ${getMediaQuery('tablet')} {
@@ -33,6 +33,12 @@ const Root = styled.div`
 
 const Header = styled(HeaderComp)`
   grid-area: header;
+
+  @media ${getMediaQuery('medium')} {
+    position: relative;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
 `;
 
 const RightPanel = styled(RightPanelComp)<{ isOpen: boolean }>`
@@ -60,6 +66,13 @@ const RightPanel = styled(RightPanelComp)<{ isOpen: boolean }>`
 const Transactions = styled(TransactionsComp)`
   grid-area: transactions;
   height: 100%;
+  overflow: auto;
+  padding-right: 20px;
+
+  @media ${getMediaQuery('medium')} {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
 `;
 
 const Dashboard = () => {

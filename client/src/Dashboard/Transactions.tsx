@@ -12,8 +12,9 @@ import {
 } from '../store/transactions/selectors';
 import { fetchTransactions } from '../store/transactions/actions';
 import { useAppDispatch } from '../store';
+import { Link } from 'react-router-dom';
 
-const Root = styled.section`
+const Root = styled.div`
   border-radius: 4px;
 `;
 
@@ -24,7 +25,7 @@ interface Props {
 const Transactions = ({ className }: Props) => {
   const dispatch = useAppDispatch();
 
-  const transactions = useSelector(selectTransactions);
+  const transactions = useSelector(selectTransactions(10));
   const isLoading = useSelector(selectIsTransactionsLoading);
 
   useEffect(
@@ -40,12 +41,17 @@ const Transactions = ({ className }: Props) => {
         header={
           <>
             <span>Transactions</span>
-            <Button>View All</Button>
+            <Link to="../transactions">
+              <Button>View All</Button>
+            </Link>
           </>
         }
       >
-        {isLoading ? 'Getting transactions...' : null}
-        {!transactions.length ? 'No transactions found!' : null}
+        {isLoading
+          ? 'Getting transactions...'
+          : !transactions.length
+          ? 'No transactions found!'
+          : null}
         {transactions.map(transaction => (
           <Transaction
             key={transaction._id}
