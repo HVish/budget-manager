@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 
 import { ReactComponent as CloseIcon } from '../assets/close.svg';
@@ -12,6 +12,10 @@ import Stats from './Stats';
 import { useAppDispatch } from '../store';
 import { toggleRightPanel } from '../store/app/actions';
 import { getMediaQuery, useIsTablet } from '../shared/media-query';
+import { fetchStats } from '../store/transactions/actions';
+import { endOfMonth, startOfMonth } from 'date-fns';
+import { useSelector } from 'react-redux';
+import { selectStats } from '../store/transactions/selectors';
 
 const Root = styled.div`
   padding: 64px 16px 32px;
@@ -58,7 +62,21 @@ const RightPanel = ({ className }: Props) => {
   const isTablet = useIsTablet();
   const dispatch = useAppDispatch();
 
+  const stats = useSelector(selectStats);
+
   const [month, setMonth] = useState(Date.now());
+
+  useEffect(
+    function getStats() {
+      dispatch(
+        fetchStats({
+          start: startOfMonth(month).getTime(),
+          end: endOfMonth(month).getTime(),
+        })
+      );
+    },
+    [dispatch, month]
+  );
 
   const closeRightPanel = () => {
     dispatch(toggleRightPanel({ isOpen: false }));
@@ -83,13 +101,13 @@ const RightPanel = ({ className }: Props) => {
         >
           <Stats
             income
-            amount={200000}
+            amount={stats.income}
             title="Total income"
             changeInPercentage={1}
           />
           <Stats
             expense
-            amount={-4258}
+            amount={stats.expense}
             title="Total expense"
             changeInPercentage={20}
           />

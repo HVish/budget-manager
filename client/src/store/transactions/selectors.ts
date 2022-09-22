@@ -12,3 +12,7 @@ export const selectTransactions = (count?: number) => (state: RootState) => {
 export const selectIsTransactionsLoading = (state: RootState) => {
   return state.transactions.isLoading;
 };
+
+export const selectStats = (state: RootState) => {
+  return state.transactions.stats;
+};

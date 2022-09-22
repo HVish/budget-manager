@@ -31,6 +31,63 @@ const getAll: RequestHandler<
   }
 };
 
+interface StatsResponse {
+  income: number;
+  expense: number;
+}
+
+const getStats: RequestHandler<
+  never,
+  StatsResponse,
+  never,
+  { start: string; end: string }
+> = async (req, res, next) => {
+  try {
+    const { start, end } = req.query;
+    // TODO: validate query params
+
+    const [result] = await TransactionModel.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: parseFloat(start), $lte: parseFloat(end) },
+        },
+      },
+      {
+        $project: {
+          income: {
+            $cond: {
+              if: { $gte: ['$amount', 0] },
+              then: '$amount',
+              else: 0,
+            },
+          },
+          expense: {
+            $cond: {
+              if: { $lt: ['$amount', 0] },
+              then: '$amount',
+              else: 0,
+            },
+          },
+          _id: '$_id',
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          income: { $sum: '$income' },
+          expense: { $sum: '$expense' },
+        },
+      },
+    ]);
+
+    return res
+      .status(StatusCodes.OK)
+      .json((result as StatsResponse) || { income: 0, expense: 0 });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const create: RequestHandler<
   never,
   WithId<Transaction>,
@@ -68,6 +125,7 @@ const create: RequestHandler<
 
 const TransactionController = {
   getAll,
+  getStats,
   create,
 };
 

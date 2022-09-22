@@ -8,3 +8,8 @@ export interface Transaction {
   /** unix timestamp */
   updatedAt: number;
 }
+
+export interface Stats {
+  income: number;
+  expense: number;
+}

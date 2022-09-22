@@ -1,5 +1,5 @@
 import request from '../../shared/request';
-import { Transaction } from '../../shared/types';
+import { Stats, Transaction } from '../../shared/types';
 
 interface GetTransactionsParams {
   lastId?: string;
@@ -19,5 +19,17 @@ interface AddTransactionPayload {
 
 export async function addTransaction(paylaod: AddTransactionPayload) {
   const response = await request.post<Transaction>('/transactions', paylaod);
+  return response.data;
+}
+
+interface GetStatsParams {
+  /** unixtime in milliseconds */
+  start: number;
+  /** unixtime in milliseconds */
+  end: number;
+}
+
+export async function getStats(params: GetStatsParams) {
+  const response = await request.get<Stats>('/transactions/stats', { params });
   return response.data;
 }
