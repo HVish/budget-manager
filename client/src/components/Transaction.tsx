@@ -2,15 +2,22 @@ import clsx from 'clsx';
 import styled from '@emotion/styled';
 
 import { colors } from '../shared/theme';
+import { ReactComponent as EditIcon } from '../assets/edit.svg';
+import { ReactComponent as CloseIcon } from '../assets/close.svg';
 import { ReactComponent as ExpenseIcon } from '../assets/arrow-up.svg';
 import { ReactComponent as IncomeIcon } from '../assets/arrow-down.svg';
 import { formatCurrency, formatUnixTime } from '../shared/utils';
+import { MouseEventHandler } from 'react';
 
 const Root = styled.div`
   display: grid;
-  grid-template-areas: 'icon title amount' 'icon date amount';
+  grid-template-areas: 'icon title amount actions' 'icon date amount actions';
   grid-template-columns: auto 1fr auto;
   align-items: center;
+  background-color: ${colors.common.white};
+  padding: 0.875rem 1rem;
+  border-radius: 6px;
+  box-shadow: 0px 0px 14px 0px rgb(0 0 0 / 5%);
 `;
 
 const Icon = styled.div`
@@ -64,14 +71,49 @@ const Amount = styled.div`
   }
 `;
 
+const IconButton = styled.button`
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+
+  &:hover {
+    background-color: ${colors.primary.bg};
+  }
+
+  &.red {
+    color: ${colors.error.main};
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+`;
+
+const Actions = styled.div`
+  grid-area: actions;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  margin-right: -12px;
+`;
+
 interface Props {
   amount: number;
   /** Unix timestamp in milliseconds */
   date: number;
   title: string;
+  onEdit?: MouseEventHandler;
+  onDelete?: MouseEventHandler;
 }
 
-const Transaction = ({ amount, date, title }: Props) => {
+const Transaction = ({ amount, date, onEdit, onDelete, title }: Props) => {
   const isIncome = amount > 0;
 
   return (
@@ -80,6 +122,14 @@ const Transaction = ({ amount, date, title }: Props) => {
       <Title>{title}</Title>
       <DateAndTime>{formatUnixTime(date)}</DateAndTime>
       <Amount>₹ {formatCurrency(amount)}</Amount>
+      <Actions>
+        <IconButton onClick={onEdit}>
+          <EditIcon />
+        </IconButton>
+        <IconButton className="red" onClick={onDelete}>
+          <CloseIcon />
+        </IconButton>
+      </Actions>
     </Root>
   );
 };

@@ -19,8 +19,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - '3000:3000'
-    volumes:
-      - ./client:/app
     env_file:
       - ./env/client.env
     restart: on-failure
