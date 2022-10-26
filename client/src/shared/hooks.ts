@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
 
-export default function useMediaQuery(queryString: string) {
+export function useMediaQuery(queryString: string) {
   const [isMatch, setIsMatch] = useState(false);
 
   function mqChange(e: MediaQueryListEvent) {
@@ -20,3 +21,30 @@ export default function useMediaQuery(queryString: string) {
 
   return isMatch;
 }
+
+export const usePortal = (container: HTMLElement) => {
+  const portal = useRef({
+    render: (props: { children: ReactNode }): JSX.Element | null => null,
+    remove: (): boolean | null => null,
+  });
+
+  const createPortal = useCallback((el: HTMLElement) => {
+    const Portal = ({ children }: { children: ReactNode }) => {
+      return ReactDOM.createPortal(children, el);
+    };
+
+    const remove = () => ReactDOM.unmountComponentAtNode(el);
+
+    return { render: Portal, remove };
+  }, []);
+
+  useEffect(() => {
+    const currentPortal = createPortal(container);
+    portal.current = currentPortal;
+    return () => {
+      currentPortal.remove();
+    };
+  }, [createPortal, container, portal]);
+
+  return portal.current.render;
+};

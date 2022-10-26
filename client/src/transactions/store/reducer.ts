@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { TransactionsState } from '../state';
+import { TransactionsState } from './types';
 import { addTransaction, fetchStats, fetchTransactions } from './actions';
 
 const initialState: TransactionsState = {

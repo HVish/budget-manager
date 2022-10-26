@@ -1,39 +1,19 @@
 import { useMemo, useState } from 'react';
-import styled from '@emotion/styled';
-import CalendarComp from 'react-calendar';
 import { format, startOfMonth } from 'date-fns';
+import { MonthPicker as MonthPickerComp } from '@mui/x-date-pickers';
 
-import { ReactComponent as ExpandIcon } from '../assets/expand.svg';
-import { colors } from '../shared/theme';
-import Model from './Model';
-
-const Root = styled.div`
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  min-width: 86px;
-  border: 1px solid ${colors.grey.main};
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: normal;
-  padding: 8px 12px;
-  padding-right: 6px;
-  color: ${colors.primary.main};
-`;
-
-const Icon = styled.span`
-  width: 20px;
-  height: 20px;
-`;
-
-const Calendar = styled(CalendarComp)`
-  border-radius: 12px;
-
-  & * {
-    border-radius: 6px;
-  }
-`;
+import {
+  Close as CloseIcon,
+  ExpandMore as ExpandIcon,
+} from '@mui/icons-material';
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Stack,
+} from '@mui/material';
 
 interface Props {
   classNames?: string;
@@ -50,22 +30,44 @@ const MonthPicker = ({ classNames, value: _value, onChange }: Props) => {
 
   const showCalender = () => setIsOpen(true);
 
+  const handleClose = () => setIsOpen(false);
+
   const handleChange = (date: Date) => {
     onChange(date.getTime());
-    setIsOpen(false);
+    handleClose();
   };
 
   return (
     <>
-      <Root className={classNames} onClick={showCalender}>
+      <Button
+        className={classNames}
+        variant="outlined"
+        endIcon={<ExpandIcon />}
+        onClick={showCalender}
+      >
         {label}
-        <Icon>
-          <ExpandIcon />
-        </Icon>
-      </Root>
-      <Model isOpen={isOpen}>
-        <Calendar view="year" onClickMonth={handleChange} value={value} />
-      </Model>
+      </Button>
+      <Dialog open={isOpen}>
+        <DialogTitle
+          component={Stack}
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          Select Month
+          <IconButton edge="end" onClick={handleClose}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <MonthPickerComp
+            disableFuture
+            date={value}
+            onChange={handleChange}
+            sx={{ width: '100%', maxWidth: '310px' }}
+          />
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

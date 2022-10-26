@@ -1,3 +1,5 @@
+import { createTheme } from '@mui/material';
+
 export const colors = {
   common: {
     bg: '#DFE7EA',
@@ -26,3 +28,50 @@ export const colors = {
     main: '#E9EEEF',
   },
 };
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#0B1008',
+    },
+    success: {
+      main: '#3BBD9A',
+    },
+    error: {
+      main: '#F96766',
+    },
+    text: {
+      primary: '#070707',
+      secondary: '#3C595D',
+    },
+  },
+  components: {
+    MuiToolbar: {
+      styleOverrides: {
+        root: {
+          paddingLeft: 24,
+          paddingRight: 24,
+          height: 64,
+        },
+      },
+    },
+    MuiTextField: {
+      defaultProps: {
+        variant: 'filled',
+      },
+    },
+    MuiButton: {
+      defaultProps: {
+        variant: 'contained',
+      },
+      styleOverrides: {
+        root: {
+          borderRadius: '100px',
+          textTransform: 'initial',
+        },
+      },
+    },
+  },
+});
+
+export default theme;

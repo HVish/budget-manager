@@ -1,5 +1,10 @@
 import { notUndefined } from '../../shared/utils';
-import { RootState } from '../state';
+import { RootState } from '../../store/state';
+
+export const selectTransaction = (id: string) => (state: RootState) => {
+  const { byId } = state.transactions;
+  return byId[id];
+};
 
 export const selectTransactions = (count?: number) => (state: RootState) => {
   const { byId, order } = state.transactions;

@@ -7,10 +7,10 @@ import {
   useNavigate,
 } from 'react-router-dom';
 
-import Login from '../Auth/Login';
-import Dashboard from '../Dashboard';
+import Login from '../auth/Login';
+import Dashboard from '../dashboard';
 import { getSession } from '../shared/session';
-import TransactionsPage from '../Transactions';
+import TransactionsPage from '../transactions/TransactionsPage';
 import Layout from './Layout';
 
 const Main = () => {

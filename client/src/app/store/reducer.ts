@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 
-import { AppState } from '../state';
+import { AppState } from './types';
 import { toggleNav, toggleRightPanel } from './actions';
 
 const initialState: AppState = {

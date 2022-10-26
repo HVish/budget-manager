@@ -1,29 +1,29 @@
 import { ReactNode } from 'react';
-import styled from '@emotion/styled';
 
+import { styled } from '@mui/material';
 import { ReactComponent as _MenuIcon } from '../assets/menu.svg';
-import { getMediaQuery, useIsMediumDevice } from '../shared/media-query';
-import { toggleNav } from '../store/app/actions';
+import { forMobile, useIsMediumDevice } from '../shared/media-query';
+import { toggleNav } from '../app/store/actions';
 import { useAppDispatch } from '../store';
 
-const Root = styled.header`
-  display: flex;
-  padding: 32px 0;
-  align-items: center;
-  font-weight: bold;
-  font-size: 24px;
+const Root = styled('header')(({ theme }) => ({
+  display: 'flex',
+  padding: theme.spacing(4, 0),
+  alignItems: 'center',
+  fontWeight: theme.typography.fontWeightBold,
+  fontSize: theme.typography.pxToRem(24),
 
-  @media ${getMediaQuery('mobile')} {
-    padding: 24px 0;
-  }
-`;
+  [forMobile(theme)]: {
+    padding: theme.spacing(3, 0),
+  },
+}));
 
 const MenuIcon = styled(_MenuIcon)`
   width: 32px;
   height: 32px;
 `;
 
-const MenuButton = styled.button`
+const MenuButton = styled('button')`
   border: none;
   background-color: transparent;
   margin-right: 1rem;

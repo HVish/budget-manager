@@ -5,7 +5,7 @@ import { Outlet } from 'react-router-dom';
 import { getMediaQuery } from '../shared/media-query';
 
 import { colors } from '../shared/theme';
-import { selectIsNavOpen } from '../store/app/selectors';
+import { selectIsNavOpen } from './store/selectors';
 import NavbarComp from './Navbar';
 
 const Root = styled.div`

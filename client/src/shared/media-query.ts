@@ -1,4 +1,5 @@
-import useMediaQuery from './hooks';
+import { Theme } from '@mui/material';
+import { useMediaQuery } from './hooks';
 
 export const MOBILE_WIDTH = 480;
 export const TABLET_WIDTH = 768;
@@ -28,4 +29,12 @@ export function useIsTablet() {
 export function useIsMediumDevice() {
   const isMatch = useMediaQuery(getMediaQuery('medium'));
   return isMatch;
+}
+
+export function forMobile(theme: Theme) {
+  return theme.breakpoints.down('sm');
+}
+
+export function forTablet(theme: Theme) {
+  return theme.breakpoints.down('md');
 }
