@@ -19,6 +19,7 @@ import { TransactionType } from './types';
 import { forMobile } from '../shared/media-query';
 import { useSelector } from 'react-redux';
 import { selectTransaction } from './store/selectors';
+import { MobileDateTimePicker } from '@mui/x-date-pickers';
 
 const DRAWER_WIDTH = 360;
 
@@ -62,10 +63,9 @@ const EditTransactionDrawer = ({ isOpen, onClose, transactionId }: Props) => {
   const transaction = useSelector(selectTransaction(transactionId));
 
   const [amount, setAmount] = useState('');
-
   const [description, setDescription] = useState('');
-
   const [transactionType, setTransactionType] = useState(TransactionType.DEBIT);
+  const [date, setDate] = useState<number | null>(Date.now());
 
   useEffect(
     function initValues() {
@@ -80,8 +80,10 @@ const EditTransactionDrawer = ({ isOpen, onClose, transactionId }: Props) => {
       setTransactionType(
         amount > 0 ? TransactionType.CREDIT : TransactionType.DEBIT
       );
+
+      setDate(transaction?.createdAt ?? Date.now());
     },
-    [transaction?.amount, transaction?.description]
+    [transaction?.amount, transaction?.createdAt, transaction?.description]
   );
 
   if (!transaction) return null;
@@ -150,6 +152,15 @@ const EditTransactionDrawer = ({ isOpen, onClose, transactionId }: Props) => {
             />
           </RadioGroup>
         </FormControl>
+        <MobileDateTimePicker
+          hideTabs
+          label="Date"
+          value={date}
+          disableFuture
+          inputFormat="dd/MM/yyyy hh:mma"
+          onChange={date => setDate(date)}
+          renderInput={params => <TextField {...params} />}
+        />
         <Button disabled={isLoading} onClick={updateTransaction}>
           {isLoading ? 'Updating...' : 'Update'}
         </Button>

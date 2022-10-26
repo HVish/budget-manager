@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import {
   Button,
   FormControl,
@@ -7,7 +9,7 @@ import {
   RadioGroup,
   TextField,
 } from '@mui/material';
-import { useState } from 'react';
+import { MobileDateTimePicker } from '@mui/x-date-pickers';
 
 import Section from '../components/Section';
 import { useAppDispatch } from '../store';
@@ -22,11 +24,13 @@ const AddTransaction = () => {
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
   const [transactionType, setTransactionType] = useState(TransactionType.DEBIT);
+  const [date, setDate] = useState<number | null>(Date.now());
 
   const reset = () => {
     setAmount('');
     setDescription('');
     setTransactionType(TransactionType.DEBIT);
+    setDate(Date.now());
   };
 
   const handleAddTransaction = async () => {
@@ -92,6 +96,15 @@ const AddTransaction = () => {
           />
         </RadioGroup>
       </FormControl>
+      <MobileDateTimePicker
+        hideTabs
+        label="Date"
+        value={date}
+        disableFuture
+        inputFormat="dd/MM/yyyy hh:mma"
+        onChange={date => setDate(date)}
+        renderInput={params => <TextField {...params} />}
+      />
       <Button disabled={isLoading} onClick={handleAddTransaction}>
         {isLoading ? 'Adding...' : 'Add'}
       </Button>
