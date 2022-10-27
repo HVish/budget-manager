@@ -20,6 +20,8 @@ import { forMobile } from '../shared/media-query';
 import { useSelector } from 'react-redux';
 import { selectTransaction } from './store/selectors';
 import { MobileDateTimePicker } from '@mui/x-date-pickers';
+import { useAppDispatch } from '../store';
+import { updateTransaction } from './store/actions';
 
 const DRAWER_WIDTH = 360;
 
@@ -58,6 +60,7 @@ interface Props {
 }
 
 const EditTransactionDrawer = ({ isOpen, onClose, transactionId }: Props) => {
+  const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
 
   const transaction = useSelector(selectTransaction(transactionId));
@@ -88,12 +91,22 @@ const EditTransactionDrawer = ({ isOpen, onClose, transactionId }: Props) => {
 
   if (!transaction) return null;
 
-  const updateTransaction = async () => {
-    if (!amount || !description) return;
+  const handleSubmit = async () => {
+    if (!amount || !description || !date) return;
 
     try {
       setIsLoading(true);
-      // TODO: send request to server
+      await dispatch(
+        updateTransaction({
+          _id: transactionId,
+          amount:
+            transactionType === TransactionType.DEBIT
+              ? -parseFloat(amount)
+              : parseFloat(amount),
+          description,
+          createdAt: date,
+        })
+      );
       onClose();
     } catch (error) {
       console.error(error);
@@ -127,7 +140,7 @@ const EditTransactionDrawer = ({ isOpen, onClose, transactionId }: Props) => {
           onKeyDown={e => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
-              updateTransaction();
+              handleSubmit();
             }
           }}
         />
@@ -157,11 +170,11 @@ const EditTransactionDrawer = ({ isOpen, onClose, transactionId }: Props) => {
           label="Date"
           value={date}
           disableFuture
-          inputFormat="dd/MM/yyyy hh:mma"
-          onChange={date => setDate(date)}
+          inputFormat="dd MMM, yyyy hh:mm a"
+          onChange={(date: Date | null) => setDate(date?.getTime() ?? null)}
           renderInput={params => <TextField {...params} />}
         />
-        <Button disabled={isLoading} onClick={updateTransaction}>
+        <Button disabled={isLoading} onClick={handleSubmit}>
           {isLoading ? 'Updating...' : 'Update'}
         </Button>
       </EditForm>

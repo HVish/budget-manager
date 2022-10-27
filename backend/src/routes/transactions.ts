@@ -8,6 +8,7 @@ const registerTransactionRoutes = (app: Express) => {
 
   routes.get('/', TransactionController.getAll);
   routes.post('/', TransactionController.create);
+  routes.patch('/', TransactionController.update);
   routes.get('/stats', TransactionController.getStats);
 
   app.use('/transactions', authorize, routes);

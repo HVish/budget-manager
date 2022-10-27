@@ -12,4 +12,9 @@ export const addTransaction = createAsyncThunk(
   API.addTransaction
 );
 
+export const updateTransaction = createAsyncThunk(
+  'transactions/update',
+  API.updateTransaction
+);
+
 export const fetchStats = createAsyncThunk('transactions/stats', API.getStats);

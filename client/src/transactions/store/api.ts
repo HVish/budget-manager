@@ -14,11 +14,22 @@ export async function getTransactions(params?: GetTransactionsParams) {
 
 interface AddTransactionPayload {
   amount: number;
+  date: number;
   description: string;
 }
 
-export async function addTransaction(paylaod: AddTransactionPayload) {
-  const response = await request.post<Transaction>('/transactions', paylaod);
+export async function addTransaction(payload: AddTransactionPayload) {
+  const response = await request.post<Transaction>('/transactions', payload);
+  return response.data;
+}
+
+type UpdateTransactionPayload = Partial<
+  Omit<Transaction, '_id' | 'updatedAt'>
+> &
+  Pick<Transaction, '_id'>;
+
+export async function updateTransaction(payload: UpdateTransactionPayload) {
+  const response = await request.patch<Transaction>('/transactions', payload);
   return response.data;
 }
 

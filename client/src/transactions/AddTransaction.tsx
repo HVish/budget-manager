@@ -34,7 +34,7 @@ const AddTransaction = () => {
   };
 
   const handleAddTransaction = async () => {
-    if (!amount || !description) return;
+    if (!amount || !description || !date) return;
 
     try {
       setIsLoading(true);
@@ -44,6 +44,7 @@ const AddTransaction = () => {
             transactionType === TransactionType.DEBIT
               ? -parseFloat(amount)
               : parseFloat(amount),
+          date,
           description,
         })
       );
@@ -101,8 +102,8 @@ const AddTransaction = () => {
         label="Date"
         value={date}
         disableFuture
-        inputFormat="dd/MM/yyyy hh:mma"
-        onChange={date => setDate(date)}
+        inputFormat="dd MMM, yyyy hh:mm a"
+        onChange={(date: Date | null) => setDate(date?.getTime() ?? null)}
         renderInput={params => <TextField {...params} />}
       />
       <Button disabled={isLoading} onClick={handleAddTransaction}>

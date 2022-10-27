@@ -1,6 +1,11 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { TransactionsState } from './types';
-import { addTransaction, fetchStats, fetchTransactions } from './actions';
+import {
+  addTransaction,
+  fetchStats,
+  fetchTransactions,
+  updateTransaction,
+} from './actions';
 
 const initialState: TransactionsState = {
   isLoading: false,
@@ -53,6 +58,26 @@ const transactions = createReducer(initialState, builder => {
       state.stats.income += amount;
     } else {
       state.stats.expense += amount;
+    }
+  });
+
+  builder.addCase(updateTransaction.fulfilled, (state, action) => {
+    const transaction = action.payload;
+    const prevTransaction = state.byId[transaction._id];
+
+    if (!prevTransaction) return;
+    state.byId[transaction._id] = transaction;
+
+    if (prevTransaction.amount > 0) {
+      state.stats.income -= prevTransaction.amount;
+    } else {
+      state.stats.expense -= prevTransaction.amount;
+    }
+
+    if (transaction.amount > 0) {
+      state.stats.income += transaction.amount;
+    } else {
+      state.stats.expense += transaction.amount;
     }
   });
 

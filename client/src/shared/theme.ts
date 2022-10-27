@@ -31,6 +31,9 @@ export const colors = {
 
 const theme = createTheme({
   palette: {
+    background: {
+      default: '#DFE7EA',
+    },
     primary: {
       main: '#0B1008',
     },

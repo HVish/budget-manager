@@ -2,9 +2,11 @@ import mongoose from 'mongoose';
 import { WithId } from 'mongodb';
 import { RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import { pick } from 'lodash';
 
 import TransactionModel, { Transaction } from '../models/transactions';
 import WalletModel from '../models/wallets';
+import { NotFoundError } from '../common/errors';
 
 interface TransactionQueryParams {
   /** find transactions after this transaction id */
@@ -91,7 +93,7 @@ const getStats: RequestHandler<
 const create: RequestHandler<
   never,
   WithId<Transaction>,
-  Omit<Transaction, 'userId' | 'createdAt' | 'updatedAt'>
+  Omit<Transaction, 'userId' | 'createdAt' | 'updatedAt'> & { date: number }
 > = async (req, res, next) => {
   const session = await mongoose.connection.startSession();
 
@@ -100,9 +102,14 @@ const create: RequestHandler<
 
     const wallet = await WalletModel.findById(req.body.wallet);
 
+    const { amount, date, description, tags } = req.body;
+
     const transaction = await TransactionModel.create({
-      ...req.body,
       userId: req.userId,
+      amount,
+      description,
+      tags,
+      createdAt: date,
     });
 
     if (wallet) {
@@ -123,10 +130,60 @@ const create: RequestHandler<
   }
 };
 
+const update: RequestHandler<
+  never,
+  WithId<Transaction>,
+  Omit<WithId<Partial<Transaction>>, 'updatedAt'>
+> = async (req, res, next) => {
+  const session = await mongoose.connection.startSession();
+
+  try {
+    session.startTransaction();
+    const transaction = await TransactionModel.findById(req.body._id);
+
+    if (!transaction) {
+      throw new NotFoundError({ message: 'Transaction not found!' });
+    }
+
+    const updates = pick(
+      req.body,
+      'amount',
+      'description',
+      'tags',
+      'createdAt'
+    );
+
+    if (transaction.wallet && updates.amount !== undefined) {
+      const wallet = await WalletModel.findById(transaction.wallet);
+
+      if (wallet) {
+        wallet.balance = wallet.balance - transaction.amount + updates.amount;
+        wallet.save();
+      }
+    }
+
+    for (const [key, value] of Object.entries(updates)) {
+      transaction.set(key, value);
+    }
+
+    await transaction.save();
+
+    await session.commitTransaction();
+
+    return res.status(StatusCodes.OK).json(transaction);
+  } catch (error) {
+    await session.abortTransaction();
+    next(error);
+  } finally {
+    await session.endSession();
+  }
+};
+
 const TransactionController = {
   getAll,
   getStats,
   create,
+  update,
 };
 
 export default TransactionController;
