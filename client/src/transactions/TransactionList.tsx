@@ -29,7 +29,7 @@ const TransactionList = ({ showAll = false }: Props) => {
 
   const isLoading = useSelector(selectIsTransactionsLoading);
   const transactions = useSelector(
-    selectTransactions(showAll ? 10 : undefined)
+    selectTransactions(showAll ? undefined : 10)
   );
 
   useEffect(
