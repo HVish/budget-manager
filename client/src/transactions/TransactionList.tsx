@@ -43,7 +43,7 @@ const TransactionList = ({ showAll = false }: Props) => {
     try {
       setIsFetchingMore(true);
       const result = await dispatch(
-        fetchTransactions({ lastId: transactions.at(-1)?._id })
+        fetchTransactions({ skip: transactions.length })
       ).unwrap();
       if (!result.length) {
         setHasMore(false);

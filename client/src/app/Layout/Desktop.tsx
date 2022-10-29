@@ -9,6 +9,7 @@ import AppHeader from '../AppHeader';
 const Root = styled('div')(({ theme }) => ({
   display: 'grid',
   gridTemplateAreas: '"nav header right-panel" "nav body right-panel"',
+  gridTemplateRows: 'min-content 1fr',
   gridTemplateColumns: '220px 1fr 320px',
   overflow: 'hidden',
   height: '100vh',

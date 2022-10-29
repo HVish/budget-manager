@@ -20,7 +20,7 @@ const initialState: TransactionsState = {
 const transactions = createReducer(initialState, builder => {
   builder.addCase(fetchTransactions.pending, (state, action) => {
     const { arg } = action.meta;
-    if (!arg?.lastId) {
+    if (!arg?.skip) {
       state.isLoading = true;
       state.byId = {};
       state.order = [];
@@ -36,7 +36,7 @@ const transactions = createReducer(initialState, builder => {
 
     state.isLoading = false;
 
-    if (!arg?.lastId) {
+    if (!arg?.skip) {
       state.byId = {};
       state.order = [];
     }

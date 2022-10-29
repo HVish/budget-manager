@@ -2,7 +2,7 @@ import request from '../../shared/request';
 import { Stats, Transaction } from '../../shared/types';
 
 interface GetTransactionsParams {
-  lastId?: string;
+  skip?: number;
 }
 
 export async function getTransactions(params?: GetTransactionsParams) {

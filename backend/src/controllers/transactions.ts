@@ -9,8 +9,8 @@ import WalletModel from '../models/wallets';
 import { NotFoundError } from '../common/errors';
 
 interface TransactionQueryParams {
-  /** find transactions after this transaction id */
-  lastId?: string;
+  /** number of transactions to skip */
+  skip?: string;
 }
 
 const getAll: RequestHandler<
@@ -20,11 +20,11 @@ const getAll: RequestHandler<
   TransactionQueryParams
 > = async (req, res, next) => {
   try {
-    const lastId = req.query.lastId;
-    const filter = lastId ? { _id: { $lt: lastId } } : {};
+    const skip = parseInt(req.query.skip || '0');
 
-    const transactions = await TransactionModel.find(filter)
+    const transactions = await TransactionModel.find({ userId: req.userId })
       .sort({ createdAt: -1 })
+      .skip(Number.isNaN(skip) ? 0 : skip)
       .limit(25);
 
     return res.status(StatusCodes.OK).json(transactions);
