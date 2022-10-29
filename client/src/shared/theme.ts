@@ -33,6 +33,7 @@ const theme = createTheme({
   palette: {
     background: {
       default: '#DFE7EA',
+      app: '#F5F5F5',
     },
     primary: {
       main: '#0B1008',
@@ -61,6 +62,16 @@ const theme = createTheme({
     MuiTextField: {
       defaultProps: {
         variant: 'filled',
+      },
+    },
+    MuiFab: {
+      defaultProps: {
+        color: 'primary',
+      },
+      styleOverrides: {
+        root: {
+          borderRadius: 16,
+        },
       },
     },
     MuiButton: {

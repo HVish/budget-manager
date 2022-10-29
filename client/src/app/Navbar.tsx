@@ -1,19 +1,18 @@
-import { useSelector } from 'react-redux';
+import { MouseEventHandler } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { ReactComponent as _MenuOpenIcon } from '../assets/menu-open.svg';
+import { Close as CloseIcon } from '@mui/icons-material';
+import { Button, IconButton, styled } from '@mui/material';
+
 import { ReactComponent as DashboardIcon } from '../assets/dashboard.svg';
 import { ReactComponent as TransactionsIcon } from '../assets/transactions.svg';
 import { ReactComponent as WalletIcon } from '../assets/wallet.svg';
 
 import routes from '../shared/routes';
-import { selectIsNavOpen } from './store/selectors';
 import NavItem from './NavItem';
-import { useIsMediumDevice } from '../shared/media-query';
 import { useAppDispatch } from '../store';
 import { toggleNav } from './store/actions';
 import { clearSession } from '../shared/session';
-import { useNavigate } from 'react-router-dom';
-import { Button, styled } from '@mui/material';
 
 const Root = styled('nav')(({ theme }) => ({
   display: 'flex',
@@ -21,20 +20,14 @@ const Root = styled('nav')(({ theme }) => ({
   gap: theme.spacing(3),
   overflow: 'auto',
   padding: theme.spacing(4, 2),
+  minWidth: 250,
+  height: '100vh',
 }));
 
-const MenuOpenIcon = styled(_MenuOpenIcon)`
-  width: 40px;
-  height: 40px;
-`;
-
-const CloseNavButton = styled('button')(({ theme }) => ({
+const CloseButton = styled(IconButton)(({ theme }) => ({
   position: 'absolute',
-  top: 0,
-  right: 0,
-  padding: theme.spacing(2),
-  border: 'none',
-  backgroundColor: 'transparent',
+  top: theme.spacing(0.5),
+  right: theme.spacing(0.5),
 }));
 
 const Icon = styled('div')(({ theme }) => ({
@@ -54,14 +47,12 @@ const Logout = styled(Button)`
 
 interface Props {
   className?: string;
+  onClose?: MouseEventHandler;
 }
 
-const Navbar = ({ className }: Props) => {
+const Navbar = ({ className, onClose }: Props) => {
   const navigation = useNavigate();
   const dispatch = useAppDispatch();
-
-  const isMediumDevice = useIsMediumDevice();
-  const isNavOpen = useSelector(selectIsNavOpen);
 
   const closeNav = () => dispatch(toggleNav({ isOpen: false }));
 
@@ -73,10 +64,10 @@ const Navbar = ({ className }: Props) => {
 
   return (
     <Root className={className}>
-      {isNavOpen && isMediumDevice && (
-        <CloseNavButton>
-          <MenuOpenIcon onClick={closeNav} />
-        </CloseNavButton>
+      {onClose && (
+        <CloseButton size="large" onClick={onClose}>
+          <CloseIcon />
+        </CloseButton>
       )}
       <Icon>👋</Icon>
       <Welcome>Hi, Sakshee</Welcome>
