@@ -13,3 +13,9 @@ export interface Stats {
   income: number;
   expense: number;
 }
+
+export interface TrendItem {
+  _id: string;
+  income: number;
+  expense: number;
+}

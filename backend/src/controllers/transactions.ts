@@ -90,6 +90,100 @@ const getStats: RequestHandler<
   }
 };
 
+interface TrendItem {
+  _id: string;
+  income: number;
+  expense: number;
+}
+
+type TrendsResponse = TrendItem[];
+
+const getTrends: RequestHandler<
+  never,
+  TrendsResponse,
+  never,
+  { by: 'year' | 'month' | 'day'; start: string; end: string }
+> = async (req, res, next) => {
+  try {
+    const { by, start, end } = req.query;
+    // TODO: validate query params
+
+    const labelMap = {
+      year: '%Y',
+      month: '%Y-%m',
+      day: '%Y-%m-%d',
+    };
+
+    const result = await TransactionModel.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: parseFloat(start), $lte: parseFloat(end) },
+        },
+      },
+      {
+        $project: {
+          label: {
+            $dateToString: {
+              format: labelMap[by],
+              date: {
+                $toDate: '$createdAt',
+              },
+            },
+          },
+          income: {
+            $cond: {
+              if: {
+                $gte: ['$amount', 0],
+              },
+              then: '$amount',
+              else: 0,
+            },
+          },
+          expense: {
+            $cond: {
+              if: {
+                $lt: ['$amount', 0],
+              },
+              then: { $abs: '$amount' },
+              else: 0,
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: '$label',
+          income: {
+            $sum: '$income',
+          },
+          expense: {
+            $sum: '$expense',
+          },
+        },
+      },
+      {
+        $setWindowFields: {
+          sortBy: { _id: 1 },
+          output: {
+            income: {
+              $sum: '$income',
+              window: { documents: ['unbounded', 'current'] },
+            },
+            expense: {
+              $sum: '$expense',
+              window: { documents: ['unbounded', 'current'] },
+            },
+          },
+        },
+      },
+    ]);
+
+    return res.status(StatusCodes.OK).json(result as TrendsResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const create: RequestHandler<
   never,
   WithId<Transaction>,
@@ -182,6 +276,7 @@ const update: RequestHandler<
 const TransactionController = {
   getAll,
   getStats,
+  getTrends,
   create,
   update,
 };

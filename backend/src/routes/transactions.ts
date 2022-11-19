@@ -10,6 +10,7 @@ const registerTransactionRoutes = (app: Express) => {
   routes.post('/', TransactionController.create);
   routes.patch('/', TransactionController.update);
   routes.get('/stats', TransactionController.getStats);
+  routes.get('/trends', TransactionController.getTrends);
 
   app.use('/transactions', authorize, routes);
 };

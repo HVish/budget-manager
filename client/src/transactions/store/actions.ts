@@ -18,3 +18,8 @@ export const updateTransaction = createAsyncThunk(
 );
 
 export const fetchStats = createAsyncThunk('transactions/stats', API.getStats);
+
+export const fetchTrends = createAsyncThunk(
+  'transactions/trends',
+  API.getTrends
+);

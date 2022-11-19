@@ -21,3 +21,21 @@ export const selectIsTransactionsLoading = (state: RootState) => {
 export const selectStats = (state: RootState) => {
   return state.transactions.stats;
 };
+
+export const selectTrends = (state: RootState) => {
+  const labels: string[] = [];
+  const incomeData: number[] = [];
+  const expenseData: number[] = [];
+
+  for (const item of state.transactions.trends) {
+    labels.push(item._id);
+    incomeData.push(item.income);
+    expenseData.push(item.expense);
+  }
+
+  return {
+    labels,
+    incomeData,
+    expenseData,
+  };
+};

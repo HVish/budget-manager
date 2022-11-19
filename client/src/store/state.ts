@@ -1,18 +1,6 @@
-import { Dictionary } from '@reduxjs/toolkit';
+import { AppState } from '../app/store/types';
 
-import { Stats, Transaction } from '../shared/types';
-
-export interface AppState {
-  isNavOpen: boolean;
-  isRightPanelOpen: boolean;
-}
-
-export interface TransactionsState {
-  isLoading: boolean;
-  byId: Dictionary<Transaction>;
-  order: string[];
-  stats: Stats;
-}
+import { TransactionsState } from '../transactions/store/types';
 
 export interface RootState {
   app: AppState;

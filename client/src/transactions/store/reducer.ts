@@ -4,6 +4,7 @@ import {
   addTransaction,
   fetchStats,
   fetchTransactions,
+  fetchTrends,
   updateTransaction,
 } from './actions';
 
@@ -15,6 +16,7 @@ const initialState: TransactionsState = {
     income: 0,
     expense: 0,
   },
+  trends: [],
 };
 
 const transactions = createReducer(initialState, builder => {
@@ -83,6 +85,10 @@ const transactions = createReducer(initialState, builder => {
 
   builder.addCase(fetchStats.fulfilled, (state, action) => {
     state.stats = action.payload;
+  });
+
+  builder.addCase(fetchTrends.fulfilled, (state, action) => {
+    state.trends = action.payload;
   });
 });
 

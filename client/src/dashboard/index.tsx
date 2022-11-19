@@ -1,7 +1,13 @@
 import Transactions from './Transactions';
+import Trends from './Trends';
 
 const Dashboard = () => {
-  return <Transactions />;
+  return (
+    <>
+      <Trends />
+      <Transactions />
+    </>
+  );
 };
 
 export default Dashboard;
