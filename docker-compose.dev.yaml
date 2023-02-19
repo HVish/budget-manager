@@ -16,8 +16,6 @@ services:
       dockerfile: Dockerfile.dev
     ports:
       - '3000:3000'
-    volumes:
-      - ./client:/app
     env_file:
       - ./env/client.env
     restart: on-failure
@@ -27,14 +25,13 @@ services:
     depends_on:
       - mongodb
     build:
-      context: ./backend
-      dockerfile: Dockerfile.dev
+      context: ./bm-server
+      dockerfile: Dockerfile
+      target: development
     ports:
       - '3001:3001'
     restart: on-failure
     container_name: backend
-    volumes:
-      - ./backend:/app
     env_file:
       - ./env/common.env
       - ./env/backend.env
