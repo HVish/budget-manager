@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
+import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { Transaction, TransactionDocument } from './schemas/transaction.schema';
 
 @Injectable()
@@ -30,6 +31,19 @@ export class TransactionsService {
       _id: new Types.ObjectId(),
     });
     await transaction.save();
+    return transaction;
+  }
+
+  async update(
+    transactionId: string,
+    userId: Types.ObjectId,
+    updateTransactionDto: UpdateTransactionDto,
+  ) {
+    const transaction = await this.transactionModel.findOneAndUpdate(
+      { _id: new Types.ObjectId(transactionId), userId },
+      { ...updateTransactionDto, updatedAt: Date.now() },
+      { new: true },
+    );
     return transaction;
   }
 }
