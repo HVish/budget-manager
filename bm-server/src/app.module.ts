@@ -7,10 +7,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { AppConfig } from './interfaces/app-config.interface';
+import { TransactionsModule } from './transactions/transactions.module';
 
 @Module({
   imports: [
-    AuthModule,
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService<AppConfig>) => ({
@@ -35,6 +35,8 @@ import { AppConfig } from './interfaces/app-config.interface';
         JWT_EXPIRATION: Joi.number().required(),
       }),
     }),
+    AuthModule,
+    TransactionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
