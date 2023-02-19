@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -18,6 +19,11 @@ import { TransactionsService } from './transactions.service';
 @Controller('transactions')
 export class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) {}
+
+  @Get()
+  async getAll(@CurrentUser() user: User) {
+    return this.transactionsService.getAll(user._id);
+  }
 
   @Get(':id')
   async get(@Param('id') transactionId: string, @CurrentUser() user: User) {
@@ -43,5 +49,10 @@ export class TransactionsController {
       user._id,
       updateTransactionDto,
     );
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') transactionId: string, @CurrentUser() user: User) {
+    await this.transactionsService.delete(transactionId, user._id);
   }
 }

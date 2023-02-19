@@ -12,6 +12,14 @@ export class TransactionsService {
     private transactionModel: Model<TransactionDocument>,
   ) {}
 
+  async getAll(userId: Types.ObjectId) {
+    // TODO: add pagination
+    const transactions = await this.transactionModel.find({
+      userId,
+    });
+    return transactions;
+  }
+
   async get(transactionId: string, userId: Types.ObjectId) {
     const transaction = await this.transactionModel.find({
       _id: new Types.ObjectId(transactionId),
@@ -45,5 +53,12 @@ export class TransactionsService {
       { new: true },
     );
     return transaction;
+  }
+
+  async delete(transactionId: string, userId: Types.ObjectId) {
+    await this.transactionModel.deleteOne({
+      _id: new Types.ObjectId(transactionId),
+      userId,
+    });
   }
 }
