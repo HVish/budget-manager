@@ -16,6 +16,8 @@ services:
       dockerfile: Dockerfile.dev
     ports:
       - '3000:3000'
+    volumes:
+      - ./client/src:/app/src
     env_file:
       - ./env/client.env
     restart: on-failure
@@ -32,6 +34,8 @@ services:
       - '3001:3001'
     restart: on-failure
     container_name: backend
+    volumes:
+      - ./bm-server/src/:/usr/app/src/
     env_file:
       - ./env/common.env
       - ./env/backend.env
