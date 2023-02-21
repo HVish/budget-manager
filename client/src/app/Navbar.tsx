@@ -13,6 +13,7 @@ import NavItem from './NavItem';
 import { useAppDispatch } from '../store';
 import { toggleNav } from './store/actions';
 import { clearSession } from '../shared/session';
+import { logout } from '../auth/api';
 
 const Root = styled('nav')(({ theme }) => ({
   display: 'flex',
@@ -56,10 +57,16 @@ const Navbar = ({ className, onClose }: Props) => {
 
   const closeNav = () => dispatch(toggleNav({ isOpen: false }));
 
-  const handleLogout = () => {
-    closeNav();
-    clearSession();
-    navigation('/auth');
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      closeNav();
+      clearSession();
+      navigation('/auth');
+    }
   };
 
   return (

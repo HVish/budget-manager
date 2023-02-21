@@ -11,7 +11,19 @@ export type UserWithoutPassword = Omit<UserInterface, 'password'>;
 
 export type UserDocument = HydratedDocument<User>;
 
-@Schema()
+@Schema({
+  versionKey: false,
+  toObject: {
+    transform: function (doc, ret) {
+      delete ret.password;
+    },
+  },
+  toJSON: {
+    transform: function (doc, ret) {
+      delete ret.password;
+    },
+  },
+})
 export class User implements UserInterface {
   @Prop({ type: SchemaTypes.ObjectId })
   _id: Types.ObjectId;
