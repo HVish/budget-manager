@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
+import { GetStatsDto } from './dto/get-stats.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { Transaction, TransactionDocument } from './schemas/transaction.schema';
 
@@ -60,5 +61,50 @@ export class TransactionsService {
       _id: new Types.ObjectId(transactionId),
       userId,
     });
+  }
+
+  async getStats(getStatsDto: GetStatsDto, userId: Types.ObjectId) {
+    const [result] = await this.transactionModel.aggregate<{
+      income: number;
+      expense: number;
+    }>([
+      {
+        $match: {
+          userId,
+          date: {
+            $gte: parseFloat(getStatsDto.start),
+            $lte: parseFloat(getStatsDto.end),
+          },
+        },
+      },
+      {
+        $project: {
+          income: {
+            $cond: {
+              if: { $gte: ['$amount', 0] },
+              then: '$amount',
+              else: 0,
+            },
+          },
+          expense: {
+            $cond: {
+              if: { $lt: ['$amount', 0] },
+              then: '$amount',
+              else: 0,
+            },
+          },
+          _id: '$_id',
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          income: { $sum: '$income' },
+          expense: { $sum: '$expense' },
+        },
+      },
+    ]);
+
+    return result;
   }
 }

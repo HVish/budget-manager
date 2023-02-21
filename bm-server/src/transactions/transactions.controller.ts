@@ -6,12 +6,14 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { CurrentUser } from 'src/auth/current-user.decorator';
 import JwtAuthGuard from 'src/auth/guards/jwt-auth.guard';
 import { User } from 'src/auth/users/schemas/user.schema';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
+import { GetStatsDto } from './dto/get-stats.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { TransactionsService } from './transactions.service';
 
@@ -23,6 +25,11 @@ export class TransactionsController {
   @Get()
   async getAll(@CurrentUser() user: User) {
     return this.transactionsService.getAll(user._id);
+  }
+
+  @Get('stats')
+  async stats(@Query() query: GetStatsDto, @CurrentUser() user: User) {
+    return this.transactionsService.getStats(query, user._id);
   }
 
   @Get(':id')
