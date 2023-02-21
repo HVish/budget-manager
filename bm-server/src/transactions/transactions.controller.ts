@@ -14,6 +14,7 @@ import JwtAuthGuard from 'src/auth/guards/jwt-auth.guard';
 import { User } from 'src/auth/users/schemas/user.schema';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { GetStatsDto } from './dto/get-stats.dto';
+import { GetTrendsDto } from './dto/get-trends.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { TransactionsService } from './transactions.service';
 
@@ -30,6 +31,11 @@ export class TransactionsController {
   @Get('stats')
   async stats(@Query() query: GetStatsDto, @CurrentUser() user: User) {
     return this.transactionsService.getStats(query, user._id);
+  }
+
+  @Get('trends')
+  async trends(@Query() query: GetTrendsDto, @CurrentUser() user: User) {
+    return this.transactionsService.getTrends(query, user._id);
   }
 
   @Get(':id')

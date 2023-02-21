@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { GetStatsDto } from './dto/get-stats.dto';
+import { GetTrendsDto } from './dto/get-trends.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { Transaction, TransactionDocument } from './schemas/transaction.schema';
 
@@ -101,6 +102,74 @@ export class TransactionsService {
           _id: null,
           income: { $sum: '$income' },
           expense: { $sum: '$expense' },
+        },
+      },
+    ]);
+
+    return result;
+  }
+
+  async getTrends(getTrendsDto: GetTrendsDto, userId: Types.ObjectId) {
+    const { by, start, end } = getTrendsDto;
+    const labelMap = { year: '%Y', month: '%Y-%m', day: '%Y-%m-%d' };
+
+    const result = await this.transactionModel.aggregate<{
+      income: number;
+      expense: number;
+    }>([
+      {
+        $match: {
+          userId,
+          date: {
+            $gte: parseFloat(start),
+            $lte: parseFloat(end),
+          },
+        },
+      },
+      {
+        $project: {
+          label: {
+            $dateToString: {
+              format: labelMap[by],
+              date: { $toDate: '$date' },
+            },
+          },
+          income: {
+            $cond: {
+              if: { $gte: ['$amount', 0] },
+              then: '$amount',
+              else: 0,
+            },
+          },
+          expense: {
+            $cond: {
+              if: { $lt: ['$amount', 0] },
+              then: { $abs: '$amount' },
+              else: 0,
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: '$label',
+          income: { $sum: '$income' },
+          expense: { $sum: '$expense' },
+        },
+      },
+      {
+        $setWindowFields: {
+          sortBy: { _id: 1 },
+          output: {
+            income: {
+              $sum: '$income',
+              window: { documents: ['unbounded', 'current'] },
+            },
+            expense: {
+              $sum: '$expense',
+              window: { documents: ['unbounded', 'current'] },
+            },
+          },
         },
       },
     ]);
