@@ -16,6 +16,8 @@ interface AddTransactionPayload {
   amount: number;
   date: number;
   description: string;
+  /** tag ids */
+  tags: string[];
 }
 
 export async function addTransaction(payload: AddTransactionPayload) {

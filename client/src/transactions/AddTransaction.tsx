@@ -46,6 +46,7 @@ const AddTransaction = () => {
               : parseFloat(amount),
           date,
           description,
+          tags: [],
         })
       );
       reset();
