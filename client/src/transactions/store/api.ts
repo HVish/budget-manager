@@ -30,8 +30,14 @@ type UpdateTransactionPayload = Partial<
 > &
   Pick<Transaction, '_id'>;
 
-export async function updateTransaction(payload: UpdateTransactionPayload) {
-  const response = await request.patch<Transaction>('/transactions', payload);
+export async function updateTransaction({
+  _id,
+  ...payload
+}: UpdateTransactionPayload) {
+  const response = await request.patch<Transaction>(
+    `/transactions/${_id}`,
+    payload
+  );
   return response.data;
 }
 

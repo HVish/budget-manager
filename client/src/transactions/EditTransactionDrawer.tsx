@@ -22,6 +22,9 @@ import { selectTransaction } from './store/selectors';
 import { MobileDateTimePicker } from '@mui/x-date-pickers';
 import { useAppDispatch } from '../store';
 import { updateTransaction } from './store/actions';
+import { selectTagsById } from '../tags/store/selectors';
+import { Tag } from '../shared/types';
+import SelectTag from './SelectTag';
 
 const DRAWER_WIDTH = 360;
 
@@ -63,6 +66,7 @@ const EditTransactionDrawer = ({ isOpen, onClose, transactionId }: Props) => {
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
 
+  const tagsById = useSelector(selectTagsById);
   const transaction = useSelector(selectTransaction(transactionId));
 
   const [amount, setAmount] = useState('');
@@ -70,12 +74,27 @@ const EditTransactionDrawer = ({ isOpen, onClose, transactionId }: Props) => {
   const [transactionType, setTransactionType] = useState(TransactionType.DEBIT);
   const [date, setDate] = useState<number | null>(Date.now());
 
+  const [tags, setTags] = useState(() => {
+    if (!transaction) return [];
+    return transaction.tags
+      .map(tagId => tagsById[tagId])
+      .filter((tag): tag is Tag => Boolean(tag));
+  });
+
   useEffect(
     function initValues() {
       const amount = transaction?.amount ?? 0;
 
       if (amount) {
         setAmount(Math.abs(amount).toString());
+      }
+
+      if (transaction?.tags) {
+        setTags(
+          transaction.tags
+            .map(tagId => tagsById[tagId])
+            .filter((tag): tag is Tag => Boolean(tag))
+        );
       }
 
       setDescription(transaction?.description ?? '');
@@ -86,13 +105,19 @@ const EditTransactionDrawer = ({ isOpen, onClose, transactionId }: Props) => {
 
       setDate(transaction?.createdAt ?? Date.now());
     },
-    [transaction?.amount, transaction?.createdAt, transaction?.description]
+    [
+      tagsById,
+      transaction?.amount,
+      transaction?.createdAt,
+      transaction?.description,
+      transaction?.tags,
+    ]
   );
 
   if (!transaction) return null;
 
   const handleSubmit = async () => {
-    if (!amount || !description || !date) return;
+    if (!amount || !date) return;
 
     try {
       setIsLoading(true);
@@ -103,6 +128,7 @@ const EditTransactionDrawer = ({ isOpen, onClose, transactionId }: Props) => {
             transactionType === TransactionType.DEBIT
               ? -parseFloat(amount)
               : parseFloat(amount),
+          tags: tags.map(tag => tag._id),
           description,
           createdAt: date,
         })
@@ -130,6 +156,7 @@ const EditTransactionDrawer = ({ isOpen, onClose, transactionId }: Props) => {
           value={amount.toString()}
           onChange={e => setAmount(e.target.value)}
         />
+        <SelectTag value={tags} onChange={setTags} />
         <TextField
           multiline
           type="text"
