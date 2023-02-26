@@ -114,8 +114,6 @@ const EditTransactionDrawer = ({ isOpen, onClose, transactionId }: Props) => {
     ]
   );
 
-  if (!transaction) return null;
-
   const handleSubmit = async () => {
     if (!amount || !date) return;
 

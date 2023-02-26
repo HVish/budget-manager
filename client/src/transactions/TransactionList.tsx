@@ -10,6 +10,7 @@ import {
   selectTransactions,
 } from './store/selectors';
 import Transaction from './Transaction';
+import EditTransactionDrawer from './EditTransactionDrawer';
 
 const LoadMoreButton = styled(Button)`
   margin-top: 1rem;
@@ -27,6 +28,11 @@ const TransactionList = ({ showAll = false }: Props) => {
   const [hasMore, setHasMore] = useState(true);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
 
+  const [editTransaction, setEditTransaction] = useState({
+    isOpen: false,
+    transactionId: '',
+  });
+
   const isLoading = useSelector(selectIsTransactionsLoading);
   const transactions = useSelector(
     selectTransactions(showAll ? undefined : 10)
@@ -38,6 +44,20 @@ const TransactionList = ({ showAll = false }: Props) => {
     },
     [dispatch]
   );
+
+  const openEditTransactionDrawer = (transactionId: string) => () => {
+    setEditTransaction({
+      isOpen: true,
+      transactionId,
+    });
+  };
+
+  const closeEditTransactionDrawer = () => {
+    setEditTransaction({
+      isOpen: false,
+      transactionId: '',
+    });
+  };
 
   const handleLoadMore = async () => {
     try {
@@ -62,8 +82,17 @@ const TransactionList = ({ showAll = false }: Props) => {
         ? 'No transactions found!'
         : null}
       {transactions.map(transaction => (
-        <Transaction key={transaction._id} transactionId={transaction._id} />
+        <Transaction
+          key={transaction._id}
+          transactionId={transaction._id}
+          onEdit={openEditTransactionDrawer(transaction._id)}
+        />
       ))}
+      <EditTransactionDrawer
+        isOpen={editTransaction.isOpen}
+        transactionId={editTransaction.transactionId}
+        onClose={closeEditTransactionDrawer}
+      />
       {showAll ? (
         <LoadMoreButton
           size="large"

@@ -61,6 +61,7 @@ const SelectTag = ({ value, onChange }: Props) => {
       loading={isSavingTag}
       disabled={isSavingTag}
       value={value}
+      ChipProps={{ size: 'small' }}
       onChange={(event, newValue) => {
         if (typeof newValue === 'string') {
           handleAddTag(newValue);

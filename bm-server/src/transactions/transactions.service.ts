@@ -106,7 +106,7 @@ export class TransactionsService {
       },
     ]);
 
-    return result;
+    return result || { expense: 0, income: 0 };
   }
 
   async getTrends(getTrendsDto: GetTrendsDto, userId: Types.ObjectId) {
@@ -158,19 +158,7 @@ export class TransactionsService {
         },
       },
       {
-        $setWindowFields: {
-          sortBy: { _id: 1 },
-          output: {
-            income: {
-              $sum: '$income',
-              window: { documents: ['unbounded', 'current'] },
-            },
-            expense: {
-              $sum: '$expense',
-              window: { documents: ['unbounded', 'current'] },
-            },
-          },
-        },
+        $sort: { _id: 1 },
       },
     ]);
 

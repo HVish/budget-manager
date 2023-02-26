@@ -41,6 +41,14 @@ export async function updateTransaction({
   return response.data;
 }
 
+export async function deleteTransaction({
+  transactionId,
+}: {
+  transactionId: string;
+}) {
+  await request.delete(`/transactions/${transactionId}`);
+}
+
 interface GetStatsParams {
   /** unixtime in milliseconds */
   start: number;

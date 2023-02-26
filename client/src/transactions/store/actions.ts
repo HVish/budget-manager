@@ -17,6 +17,11 @@ export const updateTransaction = createAsyncThunk(
   API.updateTransaction
 );
 
+export const deleteTransaction = createAsyncThunk(
+  'transactions/delete',
+  API.deleteTransaction
+);
+
 export const fetchStats = createAsyncThunk('transactions/stats', API.getStats);
 
 export const fetchTrends = createAsyncThunk(

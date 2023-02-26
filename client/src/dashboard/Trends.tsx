@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import {
   Chart,
   CategoryScale,
@@ -11,15 +11,12 @@ import {
   PointElement,
   Tooltip,
 } from 'chart.js';
-import { startOfMonth } from 'date-fns';
 import { useSelector } from 'react-redux';
 
-import MonthPicker from '../components/MonthPicker';
 import Section from '../components/Section';
 import { formatCurrency } from '../shared/utils';
-import { useAppDispatch } from '../store';
-import { fetchTrends } from '../transactions/store/actions';
 import { selectTrends } from '../transactions/store/selectors';
+import Filter from './Filter';
 
 Chart.register(
   CategoryScale,
@@ -38,21 +35,10 @@ interface Props {
 }
 
 const Trends = ({ className }: Props) => {
-  const dispatch = useAppDispatch();
   const trends = useSelector(selectTrends);
-  const [month, setMonth] = useState(Date.now());
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const chartRef = useRef<Chart<'line', number[], string> | null>(null);
-
-  useEffect(
-    function fetchData() {
-      const end = Date.now();
-      const start = startOfMonth(month).getTime();
-      dispatch(fetchTrends({ by: 'day', end, start }));
-    },
-    [dispatch, month]
-  );
 
   useEffect(
     function init() {
@@ -135,15 +121,8 @@ const Trends = ({ className }: Props) => {
   );
 
   return (
-    <Section
-      className={className}
-      header={
-        <>
-          <span>Trends</span>
-          <MonthPicker onChange={setMonth} value={month} />
-        </>
-      }
-    >
+    <Section className={className} header="Trends">
+      <Filter />
       <canvas ref={canvasRef} />
     </Section>
   );
