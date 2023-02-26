@@ -8,7 +8,7 @@ import {
   TextField,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
-import { startOfYear } from 'date-fns';
+import { endOfDay, startOfDay, startOfMonth, sub } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { useAppDispatch } from '../store';
 import { fetchTrends } from '../transactions/store/actions';
@@ -18,8 +18,12 @@ type FilterBy = 'day' | 'month' | 'year';
 const Filter = () => {
   const dispatch = useAppDispatch();
 
-  const [filterBy, setFilterBy] = useState<FilterBy>('day');
-  const [start, setStart] = useState<Date | null>(startOfYear(new Date()));
+  const [filterBy, setFilterBy] = useState<FilterBy>('month');
+
+  const [start, setStart] = useState<Date | null>(
+    startOfMonth(sub(new Date(), { months: 6 }))
+  );
+
   const [end, setEnd] = useState<Date | null>(new Date());
 
   useEffect(
@@ -28,8 +32,8 @@ const Filter = () => {
       dispatch(
         fetchTrends({
           by: filterBy,
-          end: end.getTime(),
-          start: start.getTime(),
+          end: endOfDay(end).getTime(),
+          start: startOfDay(start).getTime(),
         })
       );
     },

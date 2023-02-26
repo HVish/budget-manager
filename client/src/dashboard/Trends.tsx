@@ -3,8 +3,8 @@ import {
   Chart,
   CategoryScale,
   Colors,
-  LineController,
-  LineElement,
+  BarController,
+  BarElement,
   LinearScale,
   Legend,
   Filler,
@@ -22,8 +22,8 @@ Chart.register(
   CategoryScale,
   Colors,
   Filler,
-  LineController,
-  LineElement,
+  BarController,
+  BarElement,
   LinearScale,
   Legend,
   PointElement,
@@ -38,14 +38,14 @@ const Trends = ({ className }: Props) => {
   const trends = useSelector(selectTrends);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const chartRef = useRef<Chart<'line', number[], string> | null>(null);
+  const chartRef = useRef<Chart<'bar', number[], string> | null>(null);
 
   useEffect(
     function init() {
       if (!canvasRef.current) return;
 
       const chart = new Chart(canvasRef.current, {
-        type: 'line',
+        type: 'bar',
         options: {
           hover: {
             mode: 'index',
@@ -95,7 +95,6 @@ const Trends = ({ className }: Props) => {
               borderWidth: 1,
               borderColor: 'rgb(255, 99, 132)',
               backgroundColor: 'rgb(255, 99, 132, 0.5)',
-              fill: 'start',
               data: trends.expenseData,
             },
             {
@@ -103,7 +102,6 @@ const Trends = ({ className }: Props) => {
               borderWidth: 1,
               borderColor: 'rgb(75, 192, 192)',
               backgroundColor: 'rgb(75, 192, 192, 0.5)',
-              fill: 'start',
               data: trends.incomeData,
             },
           ],
