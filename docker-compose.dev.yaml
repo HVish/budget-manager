@@ -28,7 +28,7 @@ services:
     depends_on:
       - mongodb
     build:
-      context: ./bm-server
+      context: ./backend
       dockerfile: Dockerfile
       target: development
     ports:
@@ -36,7 +36,7 @@ services:
     restart: on-failure
     container_name: backend
     volumes:
-      - ./bm-server/src/:/usr/app/src/
+      - ./backend/src/:/usr/app/src/
     env_file:
       - ./env/common.env
       - ./env/backend.env

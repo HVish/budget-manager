@@ -28,8 +28,9 @@ services:
       - mongodb
     image: 139814396959.dkr.ecr.ap-south-1.amazonaws.com/budget-manager-backend:latest
     build:
-      context: ./bm-server
+      context: ./backend
       dockerfile: Dockerfile
+      target: production
     ports:
       - '3001:3001'
     restart: on-failure
