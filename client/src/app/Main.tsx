@@ -10,13 +10,22 @@ import {
 import Login from '../auth/Login';
 import Dashboard from '../dashboard';
 import { getSession } from '../shared/session';
+import { useAppDispatch } from '../store';
+import { fetchAllTags } from '../tags/store/actions';
 import TransactionsPage from '../transactions/TransactionsPage';
 import Layout from './Layout';
 
 const Main = () => {
+  const dispatch = useAppDispatch();
+
   const isLoggedIn = Boolean(getSession());
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    dispatch(fetchAllTags());
+  }, [dispatch, isLoggedIn]);
 
   useEffect(
     function updateOnSessionChange() {

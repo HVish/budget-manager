@@ -61,23 +61,24 @@ const LoginButton = styled(Button)`
 const Login = () => {
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const [error, setError] = useState('');
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async e => {
     e.preventDefault();
-
-    const result = await login({ username, password });
-
-    if ('error' in result) {
-      setError(result.error);
-      return;
+    try {
+      const result = await login({ email, password });
+      if ('name' in result) {
+        setSession(result);
+        navigate('/app/dashboard');
+        return;
+      }
+      setError(result.message);
+    } catch (error) {
+      setError('Something went wrong, please try again');
     }
-
-    setSession(result.token);
-    navigate('/app/dashboard');
   };
 
   return (
@@ -88,8 +89,8 @@ const Login = () => {
         <TextField
           type="text"
           label="Username"
-          value={username}
-          onChange={e => setUsername(e.target.value)}
+          value={email}
+          onChange={e => setEmail(e.target.value)}
         />
         <TextField
           type="password"

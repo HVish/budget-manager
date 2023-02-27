@@ -15,6 +15,7 @@ import Section from '../components/Section';
 import { useAppDispatch } from '../store';
 import { addTransaction } from './store/actions';
 import { TransactionType } from './types';
+import SelectTag, { TagOption } from './SelectTag';
 
 const AddTransaction = () => {
   const dispatch = useAppDispatch();
@@ -25,16 +26,18 @@ const AddTransaction = () => {
   const [description, setDescription] = useState('');
   const [transactionType, setTransactionType] = useState(TransactionType.DEBIT);
   const [date, setDate] = useState<number | null>(Date.now());
+  const [tags, setTags] = useState<TagOption[]>([]);
 
   const reset = () => {
     setAmount('');
+    setTags([]);
     setDescription('');
     setTransactionType(TransactionType.DEBIT);
     setDate(Date.now());
   };
 
   const handleAddTransaction = async () => {
-    if (!amount || !description || !date) return;
+    if (!amount || !date) return;
 
     try {
       setIsLoading(true);
@@ -45,7 +48,8 @@ const AddTransaction = () => {
               ? -parseFloat(amount)
               : parseFloat(amount),
           date,
-          description,
+          description: description.trim(),
+          tags: tags.map(tag => tag._id),
         })
       );
       reset();
@@ -64,6 +68,7 @@ const AddTransaction = () => {
         value={amount.toString()}
         onChange={e => setAmount(e.target.value)}
       />
+      <SelectTag value={tags} onChange={setTags} />
       <TextField
         multiline
         type="text"

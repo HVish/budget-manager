@@ -1,6 +1,6 @@
 import { Dictionary } from '@reduxjs/toolkit';
-import { TrendItem } from '../../shared/types';
-import { Transaction, TransactionStats } from '../types';
+import { Transaction, TrendItem } from '../../shared/types';
+import { TransactionStats } from '../types';
 
 export interface TransactionsState {
   isLoading: boolean;

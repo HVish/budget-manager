@@ -19,3 +19,8 @@ export interface TrendItem {
   income: number;
   expense: number;
 }
+
+export interface Tag {
+  _id: string;
+  name: string;
+}

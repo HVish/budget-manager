@@ -2,6 +2,7 @@ import { createReducer } from '@reduxjs/toolkit';
 import { TransactionsState } from './types';
 import {
   addTransaction,
+  deleteTransaction,
   fetchStats,
   fetchTransactions,
   fetchTrends,
@@ -81,6 +82,11 @@ const transactions = createReducer(initialState, builder => {
     } else {
       state.stats.expense += transaction.amount;
     }
+  });
+
+  builder.addCase(deleteTransaction.fulfilled, (state, action) => {
+    const { transactionId } = action.meta.arg;
+    delete state.byId[transactionId];
   });
 
   builder.addCase(fetchStats.fulfilled, (state, action) => {

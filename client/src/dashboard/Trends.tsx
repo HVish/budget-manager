@@ -1,32 +1,29 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import {
   Chart,
   CategoryScale,
   Colors,
-  LineController,
-  LineElement,
+  BarController,
+  BarElement,
   LinearScale,
   Legend,
   Filler,
   PointElement,
   Tooltip,
 } from 'chart.js';
-import { startOfMonth } from 'date-fns';
 import { useSelector } from 'react-redux';
 
-import MonthPicker from '../components/MonthPicker';
 import Section from '../components/Section';
 import { formatCurrency } from '../shared/utils';
-import { useAppDispatch } from '../store';
-import { fetchTrends } from '../transactions/store/actions';
 import { selectTrends } from '../transactions/store/selectors';
+import Filter from './Filter';
 
 Chart.register(
   CategoryScale,
   Colors,
   Filler,
-  LineController,
-  LineElement,
+  BarController,
+  BarElement,
   LinearScale,
   Legend,
   PointElement,
@@ -38,28 +35,17 @@ interface Props {
 }
 
 const Trends = ({ className }: Props) => {
-  const dispatch = useAppDispatch();
   const trends = useSelector(selectTrends);
-  const [month, setMonth] = useState(Date.now());
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const chartRef = useRef<Chart<'line', number[], string> | null>(null);
-
-  useEffect(
-    function fetchData() {
-      const end = Date.now();
-      const start = startOfMonth(month).getTime();
-      dispatch(fetchTrends({ by: 'day', end, start }));
-    },
-    [dispatch, month]
-  );
+  const chartRef = useRef<Chart<'bar', number[], string> | null>(null);
 
   useEffect(
     function init() {
       if (!canvasRef.current) return;
 
       const chart = new Chart(canvasRef.current, {
-        type: 'line',
+        type: 'bar',
         options: {
           hover: {
             mode: 'index',
@@ -109,7 +95,6 @@ const Trends = ({ className }: Props) => {
               borderWidth: 1,
               borderColor: 'rgb(255, 99, 132)',
               backgroundColor: 'rgb(255, 99, 132, 0.5)',
-              fill: 'start',
               data: trends.expenseData,
             },
             {
@@ -117,7 +102,6 @@ const Trends = ({ className }: Props) => {
               borderWidth: 1,
               borderColor: 'rgb(75, 192, 192)',
               backgroundColor: 'rgb(75, 192, 192, 0.5)',
-              fill: 'start',
               data: trends.incomeData,
             },
           ],
@@ -135,15 +119,8 @@ const Trends = ({ className }: Props) => {
   );
 
   return (
-    <Section
-      className={className}
-      header={
-        <>
-          <span>Trends</span>
-          <MonthPicker onChange={setMonth} value={month} />
-        </>
-      }
-    >
+    <Section className={className} header="Trends">
+      <Filter />
       <canvas ref={canvasRef} />
     </Section>
   );
