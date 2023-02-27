@@ -12,7 +12,8 @@ import routes from '../shared/routes';
 import NavItem from './NavItem';
 import { useAppDispatch } from '../store';
 import { toggleNav } from './store/actions';
-import { clearSession } from '../shared/session';
+import { clearSession, getSession } from '../shared/session';
+import { logout } from '../auth/api';
 
 const Root = styled('nav')(({ theme }) => ({
   display: 'flex',
@@ -54,12 +55,20 @@ const Navbar = ({ className, onClose }: Props) => {
   const navigation = useNavigate();
   const dispatch = useAppDispatch();
 
+  const session = getSession();
+
   const closeNav = () => dispatch(toggleNav({ isOpen: false }));
 
-  const handleLogout = () => {
-    closeNav();
-    clearSession();
-    navigation('/auth');
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      closeNav();
+      clearSession();
+      navigation('/auth');
+    }
   };
 
   return (
@@ -70,7 +79,7 @@ const Navbar = ({ className, onClose }: Props) => {
         </CloseButton>
       )}
       <Icon>👋</Icon>
-      <Welcome>Hi, Sakshee</Welcome>
+      <Welcome>Hi, {session?.name}</Welcome>
       <NavItem
         to={routes.dashboard}
         label="Dashboard"

@@ -1,23 +1,19 @@
 import axios from 'axios';
-import { getSession } from './session';
+import { clearSession } from './session';
 
 const request = axios.create({
   baseURL: '/api',
-  headers: {
-    Authorization: process.env.REACT_APP_AUTH_TOKEN,
-  },
 });
 
-request.interceptors.request.use(config => {
-  const session = getSession();
-
-  if (!config.headers) config.headers = {};
-
-  if (session) {
-    config.headers.Authorization = `Basic ${session}`;
+request.interceptors.response.use(
+  response => response,
+  err => {
+    if (axios.isAxiosError(err) && err.response?.status === 401) {
+      clearSession();
+      window.location.replace('/auth');
+    }
+    return Promise.reject(err);
   }
-
-  return config;
-});
+);
 
 export default request;

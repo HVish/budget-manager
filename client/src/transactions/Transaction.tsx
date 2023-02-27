@@ -1,19 +1,32 @@
-import { MouseEventHandler, useState } from 'react';
+import { useState } from 'react';
 import clsx from 'clsx';
-import { IconButton, styled } from '@mui/material';
+import {
+  Button,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
+  styled,
+  Typography,
+} from '@mui/material';
 import { Close as CloseIcon, Edit as EditIcon } from '@mui/icons-material';
 
 import { colors } from '../shared/theme';
 import { ReactComponent as ExpenseIcon } from '../assets/arrow-up.svg';
 import { ReactComponent as IncomeIcon } from '../assets/arrow-down.svg';
 import { formatCurrency, formatUnixTime } from '../shared/utils';
-import EditTransactionDrawer from './EditTransactionDrawer';
 import { useSelector } from 'react-redux';
 import { selectTransaction } from './store/selectors';
+import { useAppDispatch } from '../store';
+import { deleteTransaction } from './store/actions';
+import { selectTagsById } from '../tags/store/selectors';
 
 const Root = styled('div')(({ theme }) => ({
   display: 'grid',
-  gridTemplateAreas: "'icon title amount actions' 'icon date amount actions'",
+  gridTemplateAreas: "'icon date amount actions' 'icon details amount actions'",
   gridTemplateColumns: 'auto 1fr auto',
   alignItems: 'center',
   padding: theme.spacing(1.75, 2),
@@ -48,12 +61,11 @@ const Icon = styled('div')`
   }
 `;
 
-const Title = styled('div')(({ theme }) => ({
-  gridArea: 'title',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
-  fontWeight: theme.typography.fontWeightBold,
+const Details = styled('div')(({ theme }) => ({
+  gridArea: 'details',
+  display: 'flex',
+  gap: theme.spacing(1),
+  flexWrap: 'wrap',
 }));
 
 const DateAndTime = styled('div')(({ theme }) => ({
@@ -89,44 +101,79 @@ const Actions = styled('div')(({ theme }) => ({
 }));
 
 interface Props {
-  onDelete?: MouseEventHandler;
-  onEdit?: MouseEventHandler;
+  onEdit: () => void;
   transactionId: string;
 }
 
-const Transaction = ({ onDelete, onEdit, transactionId }: Props) => {
-  const [isEditing, setIsEditing] = useState(false);
+const Transaction = ({ onEdit, transactionId }: Props) => {
+  const dispatch = useAppDispatch();
+
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isConfirmDeleteAlertOpen, setIsConfirmDeleteAlertOpen] =
+    useState(false);
+
+  const tagsById = useSelector(selectTagsById);
   const transaction = useSelector(selectTransaction(transactionId));
 
   if (!transaction) return null;
 
-  const { amount, description, createdAt } = transaction;
+  const { amount, createdAt } = transaction;
 
   const isIncome = amount > 0;
 
-  const handleEdit = () => {
-    setIsEditing(true);
+  const openConfirmDeleteAlert = () => setIsConfirmDeleteAlertOpen(true);
+  const closeConfirmDeleteAlert = () => setIsConfirmDeleteAlertOpen(false);
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    await dispatch(deleteTransaction({ transactionId }));
+    setIsDeleting(false);
+    closeConfirmDeleteAlert();
   };
 
   return (
     <Root className={clsx({ income: isIncome, expense: !isIncome })}>
       <Icon>{isIncome ? <IncomeIcon /> : <ExpenseIcon />}</Icon>
-      <Title>{description}</Title>
       <DateAndTime>{formatUnixTime(createdAt)}</DateAndTime>
+      <Details>
+        {transaction.tags.length ? (
+          transaction.tags.map(tagId => {
+            const tag = tagsById[tagId];
+            if (!tag) return null;
+            return <Chip key={tagId} label={tag.name} size="small" />;
+          })
+        ) : (
+          <Typography variant="body2">{transaction.description}</Typography>
+        )}
+      </Details>
       <Amount>₹ {formatCurrency(amount)}</Amount>
       <Actions>
-        <IconButton onClick={handleEdit}>
+        <IconButton onClick={onEdit}>
           <EditIcon />
         </IconButton>
-        <IconButton color="error" onClick={onDelete}>
+        <IconButton color="error" onClick={openConfirmDeleteAlert}>
           <CloseIcon />
         </IconButton>
       </Actions>
-      <EditTransactionDrawer
-        isOpen={isEditing}
-        onClose={() => setIsEditing(false)}
-        transactionId={transactionId}
-      />
+      <Dialog
+        open={isConfirmDeleteAlertOpen}
+        maxWidth="sm"
+        onClose={closeConfirmDeleteAlert}
+      >
+        <DialogTitle>Delete transaction?</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Would you like to delete the transaction with amount:{' '}
+            {transaction.amount}?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeConfirmDeleteAlert}>No</Button>
+          <Button disabled={isDeleting} color="error" onClick={handleDelete}>
+            {isDeleting ? 'Deleting...' : 'Yes, Delete it'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Root>
   );
 };

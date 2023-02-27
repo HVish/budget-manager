@@ -2,10 +2,11 @@ import request from '../../shared/request';
 import { Stats, Transaction, TrendItem } from '../../shared/types';
 
 interface GetTransactionsParams {
-  skip?: number;
+  skip: number;
+  limit: number;
 }
 
-export async function getTransactions(params?: GetTransactionsParams) {
+export async function getTransactions(params: GetTransactionsParams) {
   const response = await request.get<Transaction[]>('/transactions', {
     params,
   });
@@ -16,6 +17,8 @@ interface AddTransactionPayload {
   amount: number;
   date: number;
   description: string;
+  /** tag ids */
+  tags: string[];
 }
 
 export async function addTransaction(payload: AddTransactionPayload) {
@@ -28,9 +31,23 @@ type UpdateTransactionPayload = Partial<
 > &
   Pick<Transaction, '_id'>;
 
-export async function updateTransaction(payload: UpdateTransactionPayload) {
-  const response = await request.patch<Transaction>('/transactions', payload);
+export async function updateTransaction({
+  _id,
+  ...payload
+}: UpdateTransactionPayload) {
+  const response = await request.patch<Transaction>(
+    `/transactions/${_id}`,
+    payload
+  );
   return response.data;
+}
+
+export async function deleteTransaction({
+  transactionId,
+}: {
+  transactionId: string;
+}) {
+  await request.delete(`/transactions/${transactionId}`);
 }
 
 interface GetStatsParams {
