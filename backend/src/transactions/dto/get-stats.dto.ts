@@ -1,11 +1,14 @@
-import { IsNumberString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsNumber } from 'class-validator';
 
 export class GetStatsDto {
   /** unix timestamp in milli-seconds */
-  @IsNumberString()
-  start: string;
+  @IsNumber()
+  @Type(() => Number)
+  start: number;
 
   /** unix timestamp in milli-seconds */
-  @IsNumberString()
-  end: string;
+  @IsNumber()
+  @Type(() => Number)
+  end: number;
 }

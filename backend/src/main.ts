@@ -8,7 +8,7 @@ import { AppConfig } from './interfaces/app-config.interface';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(morgan('dev'));
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   const config = app.get(ConfigService<AppConfig>);
   await app.listen(config.get('PORT'));
 }

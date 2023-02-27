@@ -1,4 +1,5 @@
-import { IsIn, IsNumberString, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsIn, IsNumber, IsString } from 'class-validator';
 
 export class GetTrendsDto {
   @IsString()
@@ -6,10 +7,12 @@ export class GetTrendsDto {
   by: 'year' | 'month' | 'day';
 
   /** unix timestamp in milli-seconds */
-  @IsNumberString()
-  start: string;
+  @IsNumber()
+  @Type(() => Number)
+  start: number;
 
   /** unix timestamp in milli-seconds */
-  @IsNumberString()
-  end: string;
+  @IsNumber()
+  @Type(() => Number)
+  end: number;
 }

@@ -73,6 +73,7 @@ export class TransactionsService {
   }
 
   async getStats(getStatsDto: GetStatsDto, userId: Types.ObjectId) {
+    const { start, end } = getStatsDto;
     const [result] = await this.transactionModel.aggregate<{
       income: number;
       expense: number;
@@ -80,10 +81,7 @@ export class TransactionsService {
       {
         $match: {
           userId,
-          date: {
-            $gte: parseFloat(getStatsDto.start),
-            $lte: parseFloat(getStatsDto.end),
-          },
+          date: { $gte: start, $lte: end },
         },
       },
       {
@@ -128,10 +126,7 @@ export class TransactionsService {
       {
         $match: {
           userId,
-          date: {
-            $gte: parseFloat(start),
-            $lte: parseFloat(end),
-          },
+          date: { $gte: start, $lte: end },
         },
       },
       {
