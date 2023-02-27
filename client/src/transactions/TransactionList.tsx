@@ -12,6 +12,8 @@ import {
 import Transaction from './Transaction';
 import EditTransactionDrawer from './EditTransactionDrawer';
 
+const PER_PAGE = 50;
+
 const LoadMoreButton = styled(Button)`
   margin-top: 1rem;
   width: 100%;
@@ -40,7 +42,7 @@ const TransactionList = ({ showAll = false }: Props) => {
 
   useEffect(
     function getData() {
-      dispatch(fetchTransactions());
+      dispatch(fetchTransactions({ skip: 0, limit: PER_PAGE }));
     },
     [dispatch]
   );
@@ -63,7 +65,10 @@ const TransactionList = ({ showAll = false }: Props) => {
     try {
       setIsFetchingMore(true);
       const result = await dispatch(
-        fetchTransactions({ skip: transactions.length })
+        fetchTransactions({
+          skip: transactions.length,
+          limit: PER_PAGE,
+        })
       ).unwrap();
       if (!result.length) {
         setHasMore(false);

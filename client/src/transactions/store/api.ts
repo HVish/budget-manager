@@ -2,10 +2,11 @@ import request from '../../shared/request';
 import { Stats, Transaction, TrendItem } from '../../shared/types';
 
 interface GetTransactionsParams {
-  skip?: number;
+  skip: number;
+  limit: number;
 }
 
-export async function getTransactions(params?: GetTransactionsParams) {
+export async function getTransactions(params: GetTransactionsParams) {
   const response = await request.get<Transaction[]>('/transactions', {
     params,
   });

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
+import { GetAllTransactionsDto } from './dto/get-all-transactions.dto';
 import { GetStatsDto } from './dto/get-stats.dto';
 import { GetTrendsDto } from './dto/get-trends.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
@@ -14,11 +15,18 @@ export class TransactionsService {
     private transactionModel: Model<TransactionDocument>,
   ) {}
 
-  async getAll(userId: Types.ObjectId) {
-    // TODO: add pagination
-    const transactions = await this.transactionModel.find({
-      userId,
-    });
+  async getAll(
+    getAllTransactionDto: GetAllTransactionsDto,
+    userId: Types.ObjectId,
+  ) {
+    const { limit, skip } = getAllTransactionDto;
+
+    const transactions = await this.transactionModel
+      .find({ userId })
+      .skip(skip)
+      .limit(limit)
+      .sort({ date: -1 });
+
     return transactions;
   }
 

@@ -13,6 +13,7 @@ import { CurrentUser } from 'src/auth/current-user.decorator';
 import JwtAuthGuard from 'src/auth/guards/jwt-auth.guard';
 import { User } from 'src/auth/users/schemas/user.schema';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
+import { GetAllTransactionsDto } from './dto/get-all-transactions.dto';
 import { GetStatsDto } from './dto/get-stats.dto';
 import { GetTrendsDto } from './dto/get-trends.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
@@ -24,8 +25,11 @@ export class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) {}
 
   @Get()
-  async getAll(@CurrentUser() user: User) {
-    return this.transactionsService.getAll(user._id);
+  async getAll(
+    @Query() query: GetAllTransactionsDto,
+    @CurrentUser() user: User,
+  ) {
+    return this.transactionsService.getAll(query, user._id);
   }
 
   @Get('stats')
