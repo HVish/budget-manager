@@ -1,3 +1,4 @@
+import { createSelector } from '@reduxjs/toolkit';
 import { notUndefined } from '../../shared/utils';
 import { RootState } from '../../store/state';
 
@@ -22,20 +23,23 @@ export const selectStats = (state: RootState) => {
   return state.transactions.stats;
 };
 
-export const selectTrends = (state: RootState) => {
-  const labels: string[] = [];
-  const incomeData: number[] = [];
-  const expenseData: number[] = [];
+export const selectTrends = createSelector(
+  (state: RootState) => state.transactions.trends,
+  trends => {
+    const labels: string[] = [];
+    const incomeData: number[] = [];
+    const expenseData: number[] = [];
 
-  for (const item of state.transactions.trends) {
-    labels.push(item._id);
-    incomeData.push(item.income);
-    expenseData.push(item.expense);
+    for (const item of trends) {
+      labels.push(item._id);
+      incomeData.push(item.income);
+      expenseData.push(item.expense);
+    }
+
+    return {
+      labels,
+      incomeData,
+      expenseData,
+    };
   }
-
-  return {
-    labels,
-    incomeData,
-    expenseData,
-  };
-};
+);
